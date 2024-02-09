@@ -3,6 +3,9 @@
 # assets
 /src/assets
 
+# data
+/src/data
+
 # dependencies
 /node_modules
 /.pnp
