@@ -73,9 +73,9 @@ const Header = () => {
 
   return (
     <section className="sticky top-0 left-0 right-0 z-50">
-      <header className="container mx-auto px-5 flex justify-between py-4 items-center">
-        <div >
-            <img className="w-32" src={images.logo} alt="logo"/>
+      <header className="container mx-auto px-5 flex justify-between py-4 items-center bg-gradient-to-r from-stone-100 to-lime-100">
+        <div className="relative overflow-hidden">
+            <img className="object-cover rounded-2xl backdrop-blur-sm" src={images.logo} alt="logo"/>
         </div>
         <div className="lg:hidden z-50">
           {navIsVisible ? <IoMdClose className="w-6 h-6" onClick={navVisibilityHandler}/> : <IoMdMenu className="w-6 h-6" onClick={navVisibilityHandler}/>}
