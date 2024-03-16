@@ -2,7 +2,7 @@ import monpkg from "mongoose";
 import hashpkg1 from "bcryptjs";
 import tokenpkg from "jsonwebtoken";
 
-const { hash } = hashpkg1;
+const { hash, compare } = hashpkg1;
 const { Schema, model } = monpkg;
 const { sign } = tokenpkg;
 
@@ -31,6 +31,10 @@ UserSchema.methods.generateJWT = async function () {
   return await sign({ id: this._id }, process.env.JWt_SECRET, {
     expiresIn: "30d",
   });
+};
+
+UserSchema.methods.comparePassword = async function (enteredPassword) {
+  return await compare(enteredPassword, this.password);
 };
 
 const User = model("User", UserSchema);
