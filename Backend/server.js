@@ -1,5 +1,8 @@
 import express, { request } from "express";
 import dotenv from "dotenv";
+import path from "path";
+import { getGlobals } from "common-es";
+
 import connectDB from "./config/db.js";
 import {
   errorResponseHandler,
@@ -21,6 +24,10 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/users", UserRoutes);
+
+// static assets
+const { __dirname } = getGlobals(import.meta.url);
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 //error handlers
 app.use(errorResponseHandler);
