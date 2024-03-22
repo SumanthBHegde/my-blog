@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { BsCheckLg } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
 
@@ -9,22 +10,26 @@ const Articlecard = ({ post, className }) => {
     <div
       className={`rounded-xl overflow-hidden shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] ${className}`}
     >
-      <img
-        src={
-          post.photo
-            ? stables.UPLOAD_FOLDER_BASE_URL + post.photo
-            : images.samplePostImage
-        }
-        alt="title"
-        className="object-cover object-center w-full h-auto md:h-52 lg:h-48 xl:h-60"
-      />
+      <Link to={`/blog/${post.slug}`}>
+        <img
+          src={
+            post.photo
+              ? stables.UPLOAD_FOLDER_BASE_URL + post.photo
+              : images.samplePostImage
+          }
+          alt="title"
+          className="object-cover object-center w-full h-auto md:h-52 lg:h-48 xl:h-60"
+        />
+      </Link>
       <div className="p-5">
-        <h2 className="font-Roboto font-bold text-xl text-dark-soft md:text-2xl lg:text-[28px]">
-          {post.title}
-        </h2>
-        <p className="mt-3 text-sm text-dark-light md:text-lg">
-          {post.caption}
-        </p>
+        <Link to={`/blog/${post.slug}`}>
+          <h2 className="font-roboto font-bold text-xl text-dark-soft md:text-2xl lg:text-[28px]">
+            {post.title}
+          </h2>
+          <p className="mt-3 text-sm text-dark-light md:text-lg">
+            {post.caption}
+          </p>
+        </Link>
         <div className="flex items-center justify-between mt-6 flex-nowrap">
           <div className="flex items-center gap-x-2 md:gap-x-2.5">
             <img
