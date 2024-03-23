@@ -1,11 +1,11 @@
 import React from "react";
-import { images } from "../../constants";
+import { images, stables } from "../../constants";
 import { FiMessageSquare, FiEdit2, FiTrash } from "react-icons/fi";
 import CommentForm from "./CommentForm";
 
 const Comment = ({
   comment,
-  LogginedUserId,
+  logginedUserId,
   affectedComment,
   setAffectedComment,
   addComment,
@@ -14,8 +14,8 @@ const Comment = ({
   deleteComment,
   replies,
 }) => {
-  const isUserLoggined = Boolean(LogginedUserId);
-  const commentBelongsToUser = LogginedUserId === comment.user._id;
+  const isUserLoggined = Boolean(logginedUserId);
+  const commentBelongsToUser = logginedUserId === comment.user._id;
 
   const isReplying =
     affectedComment &&
@@ -33,12 +33,16 @@ const Comment = ({
   return (
     <div className="flex flex-nowrap items-start gap-x-3 bg-[#F2F4F5] p-3 rounded-lg">
       <img
-        src={images.PostProfileImage}
+        src={
+          comment?.user?.avatar
+            ? stables.UPLOAD_FOLDER_BASE_URL + comment.user.avatar
+            : images.userImage
+        }
         alt="user profile"
-        className="w-9 h-9 object-cover rounded-full"
+        className="object-cover rounded-full w-9 h-9"
       />
-      <div className="flex flex-1 flex-col">
-        <h5 className="font-bold text-dark-hard text-xs lg:text-sm">
+      <div className="flex flex-col flex-1">
+        <h5 className="text-xs font-bold text-dark-hard lg:text-sm">
           {comment.user.name}
         </h5>
         <span className="text-xs text-dark-light">
@@ -50,20 +54,19 @@ const Comment = ({
           })}
         </span>
         {!isEditing && (
-          <p className="font-OpenSans mt-[10px] text-dark-light">
+          <p className="font-opensans mt-[10px] text-dark-light">
             {comment.desc}
           </p>
         )}
-
         {isEditing && (
           <CommentForm
             btnLable="Update"
-            formSubmitHandler={(value) => updateComment(value, comment._id)}
+            formSubmitHanlder={(value) => updateComment(value, comment._id)}
             formCancelHandler={() => setAffectedComment(null)}
             initialText={comment.desc}
           />
         )}
-        <div className="flex items-center gap-x-3 text-dark-light font-Roboto text-sm mt-3 mb-3">
+        <div className="flex items-center mt-3 mb-3 text-sm gap-x-3 text-dark-light font-roboto">
           {isUserLoggined && (
             <button
               className="flex items-center space-x-2"
@@ -78,7 +81,7 @@ const Comment = ({
           {commentBelongsToUser && (
             <>
               <button
-                className=" flex items-center space-x-2"
+                className="flex items-center space-x-2"
                 onClick={() =>
                   setAffectedComment({ type: "editing", _id: comment._id })
                 }
@@ -87,7 +90,7 @@ const Comment = ({
                 <span>Edit</span>
               </button>
               <button
-                className=" flex items-center space-x-2"
+                className="flex items-center space-x-2"
                 onClick={() => deleteComment(comment._id)}
               >
                 <FiTrash className="w-4 h-auto" />
@@ -99,7 +102,7 @@ const Comment = ({
         {isReplying && (
           <CommentForm
             btnLable="Reply"
-            formSubmitHandler={(value) =>
+            formSubmitHanlder={(value) =>
               addComment(value, repliedCommentId, replyOnUserId)
             }
             formCancelHandler={() => setAffectedComment(null)}
@@ -115,7 +118,7 @@ const Comment = ({
                 setAffectedComment={setAffectedComment}
                 comment={reply}
                 deleteComment={deleteComment}
-                LogginedUserId={LogginedUserId}
+                logginedUserId={logginedUserId}
                 replies={[]}
                 updateComment={updateComment}
                 parentId={comment._id}

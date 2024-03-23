@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
 //Components
 import SuggestedPosts from "./container/SuggestedPosts";
@@ -9,7 +10,7 @@ import SocialShareButton from "../../components/SocialShareButton";
 import MainLayout from "../../components/MainLayout";
 import BreadCrumbs from "../../components/BreadCrumbs";
 import { images, stables } from "../../constants";
-import { getSinglePost } from "../../services/index/posts";
+import { getSinglePost, getAllPosts } from "../../services/index/posts";
 import ArticleDetailSkeleton from "./components/ArticleDetailSkeleton";
 import ErrorMessage from "../../components/Errormessage";
 
@@ -22,56 +23,9 @@ import Text from "@tiptap/extension-text";
 import Italic from "@tiptap/extension-italic";
 import parse from "html-react-parser";
 
-const postsData = [
-  {
-    _id: "1",
-    image: images.Post1Image,
-    title: "Help children get better education",
-    createdAt: "2024-02-09T12:00:00Z",
-  },
-  {
-    _id: "2",
-    image: images.Post1Image,
-    title: "Help children get better education",
-    createdAt: "2024-02-09T12:00:00Z",
-  },
-  {
-    _id: "3",
-    image: images.Post1Image,
-    title: "Help children get better education",
-    createdAt: "2024-02-09T12:00:00Z",
-  },
-  {
-    _id: "4",
-    image: images.Post1Image,
-    title: "Help children get better education",
-    createdAt: "2024-02-09T12:00:00Z",
-  },
-];
-
-const tagsData = [
-  "Medical",
-  "Storytelling",
-  "Personal Narrative",
-  "Memoir",
-  "Life Experiences",
-  "Inspiration",
-  "Life Lessons",
-  "Reflection",
-  "Adventure",
-  "Journey",
-  "Self-Discovery",
-  "Emotional",
-  "True Stories",
-  "Anecdotes",
-  "Share Your Story",
-  "Narrative",
-  "Heartwarming",
-  "Education",
-];
-
 function ArticleDetailPage() {
   const { slug } = useParams();
+  const userState = useSelector((state) => state.user);
   const [breadCrumbsData, setbreadCrumbsData] = useState([]);
   const [body, setBody] = useState(null);
 
@@ -90,6 +44,11 @@ function ArticleDetailPage() {
         )
       );
     },
+  });
+
+  const { data: postsData } = useQuery({
+    queryFn: () => getAllPosts(),
+    queryKey: ["posts"],
   });
 
   return (
@@ -125,14 +84,18 @@ function ArticleDetailPage() {
               {data?.title}
             </h1>
             <div className="mt-4 prose-sm prose sm:prose-base">{body}</div>
-
-            <CommetnsContainer className="mt-10" LogginedUserId="a" />
+            <CommetnsContainer
+              comments={data?.comments}
+              className="mt-10"
+              logginedUserId={userState?.userInfo?._id}
+              postSlug={slug}
+            />
           </article>
           <div>
             <SuggestedPosts
               header="Latest Article"
               posts={postsData}
-              tags={tagsData}
+              tags={data?.tags}
               className="mt-8 lg:mt-0 lg:max-w-xs lg:ml-5 lg:mr-5"
             />
             <div className="mt-7">
@@ -140,8 +103,8 @@ function ArticleDetailPage() {
                 Share on
               </h2>
               <SocialShareButton
-                url={encodeURI("url")}
-                title={encodeURIComponent("Check")}
+                url={encodeURI(window.location.href)}
+                title={encodeURIComponent(data?.title)}
               />
             </div>
           </div>
