@@ -179,9 +179,16 @@ const getAllPosts = async (req, res, next) => {
     const total = await Post.countDocuments();
     const pages = Math.ceil(total / pageSize);
 
+    res.header({
+      "x-filter": filter,
+      "x-totalcount": JSON.stringify(total),
+      "x-currentpage": JSON.stringify(page),
+      "x-pagesize": JSON.stringify(pageSize),
+      "x-totalpagecount": JSON.stringify(pages),
+    });
+
     if (page > pages) {
-      const error = new Error("No page found");
-      return next(error);
+      return res.json([]);
     }
 
     const result = await query
@@ -194,14 +201,6 @@ const getAllPosts = async (req, res, next) => {
         },
       ])
       .sort({ updatedAt: "desc" });
-
-    res.header({
-      "x-filter": filter,
-      "x-totalcount": JSON.stringify(total),
-      "x-currentpage": JSON.stringify(page),
-      "x-pagesize": JSON.stringify(pageSize),
-      "x-totalpagecount": JSON.stringify(pages),
-    });
 
     // Return the retrieved posts as a JSON response
     return res.json(result);
