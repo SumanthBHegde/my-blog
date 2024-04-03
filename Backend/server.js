@@ -2,6 +2,7 @@ import express, { request } from "express";
 import dotenv from "dotenv";
 import path from "path";
 import { getGlobals } from "common-es";
+import cors from "cors";
 
 import connectDB from "./config/db.js";
 import {
@@ -18,6 +19,7 @@ dotenv.config();
 connectDB();
 const app = express();
 app.use(express.json());
+app.use(cors);
 
 console.log("check");
 

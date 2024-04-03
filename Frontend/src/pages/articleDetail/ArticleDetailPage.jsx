@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import parseJsonToHtml from "../../utils/parseJsonToHtml";
 
 //Components
 import SuggestedPosts from "./container/SuggestedPosts";
@@ -12,16 +13,8 @@ import BreadCrumbs from "../../components/BreadCrumbs";
 import { images, stables } from "../../constants";
 import { getSinglePost, getAllPosts } from "../../services/index/posts";
 import ArticleDetailSkeleton from "./components/ArticleDetailSkeleton";
-import ErrorMessage from "../../components/Errormessage";
-
-//tiptap
-import { generateHTML } from "@tiptap/html";
-import Bold from "@tiptap/extension-bold";
-import Document from "@tiptap/extension-document";
-import Paragraph from "@tiptap/extension-paragraph";
-import Text from "@tiptap/extension-text";
-import Italic from "@tiptap/extension-italic";
-import parse from "html-react-parser";
+import ErrorMessage from "../../components/ErrorMessage";
+import Editor from "../../components/editor/Editor";
 
 function ArticleDetailPage() {
   const { slug } = useParams();
@@ -38,11 +31,7 @@ function ArticleDetailPage() {
         { name: "Blog", link: "/blog" },
         { name: "Article title", link: `/blog/${data.slug}` },
       ]);
-      setBody(
-        parse(
-          generateHTML(data?.body, [Bold, Italic, Text, Paragraph, Document])
-        )
-      );
+      setBody(parseJsonToHtml(data?.body));
     },
   });
 
@@ -83,7 +72,11 @@ function ArticleDetailPage() {
             <h1 className="text-xl font-medium font-Roboto mt-4 text-dark-hard md:text-[26px]">
               {data?.title}
             </h1>
-            <div className="mt-4 prose-sm prose sm:prose-base">{body}</div>
+            <div className="w-full">
+              {!isLoading && !isError && (
+                <Editor content={data?.body} editable={false} />
+              )}
+            </div>
             <CommetnsContainer
               comments={data?.comments}
               className="mt-10"
