@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 import { getSinglePost, updatePost } from "../../../../services/index/posts";
 import ArticleDetailSkeleton from "../../../articleDetail/components/ArticleDetailSkeleton";
 import ErrorMessage from "../../../../components/ErrorMessage";
-import parseJsonToHtml from "../../../../utils/parseJsonToHtml";
 import { stables } from "../../../../constants";
 import Editor from "../../../../components/editor/Editor";
 

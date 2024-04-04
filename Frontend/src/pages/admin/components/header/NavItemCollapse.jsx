@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const NavItemCollapse = ({
   title,
-  content,
+  children,
   icon,
   name,
   activeNavName,
@@ -39,11 +39,7 @@ const NavItemCollapse = ({
         {title}
       </div>
       <div className="d-collapse-content">
-        <div className="flex flex-col mt-2 gap-y-2">
-          {content.map((item) => (
-            <Link to={item.link}>{item.title}</Link>
-          ))}
-        </div>
+        <div className="flex flex-col mt-2 gap-y-2">{children}</div>
       </div>
     </div>
   );
