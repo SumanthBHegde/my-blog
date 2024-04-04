@@ -1,3 +1,6 @@
+import { useCallback } from "react";
+
+//react icons
 import {
   AiOutlineBold,
   AiOutlineClose,
@@ -12,10 +15,19 @@ import {
 import { BiParagraph } from "react-icons/bi";
 import { FiCode } from "react-icons/fi";
 import { MdOutlineLayersClear } from "react-icons/md";
-import { PiCodeBlock, PiQuotes } from "react-icons/pi";
+import { PiCodeBlock, PiQuotes, PiImageSquareBold } from "react-icons/pi";
 import { TbSpacingVertical } from "react-icons/tb";
 
 const MenuBar = ({ editor }) => {
+  //functionality for adding image
+  const addImage = useCallback(() => {
+    const url = window.prompt("URL");
+
+    if (url) {
+      editor.chain().focus().setImage({ src: url }).run();
+    }
+  }, [editor]);
+
   // Check if the editor is available
   if (!editor) {
     return null; // Return null if editor is not available
@@ -140,6 +152,11 @@ const MenuBar = ({ editor }) => {
         }`}
       >
         <BiParagraph />
+      </button>
+
+      {/* Button to add images */}
+      <button onClick={addImage} className="editor-btn">
+        <PiImageSquareBold />
       </button>
 
       {/* Button to toggle bullet list */}

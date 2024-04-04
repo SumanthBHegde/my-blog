@@ -7,8 +7,11 @@ import Text from "@tiptap/extension-text";
 import Italic from "@tiptap/extension-italic";
 import parse from "html-react-parser";
 
+//extension
+import { extensions } from "../constants/tiptapExtensions";
+
 const parseJsonToHtml = (json) => {
-  return parse(generateHTML(json, [Bold, Italic, Text, Paragraph, Document]));
+  return parse(generateHTML(json, extensions));
 };
 
 export default parseJsonToHtml;
