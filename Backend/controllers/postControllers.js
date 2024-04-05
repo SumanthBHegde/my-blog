@@ -124,6 +124,10 @@ const getPost = async (req, res, next) => {
         select: ["avatar", "name"],
       },
       {
+        path: "categories",
+        select: ["title"],
+      },
+      {
         path: "comments",
         match: {
           check: true,

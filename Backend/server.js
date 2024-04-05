@@ -14,6 +14,7 @@ import {
 import UserRoutes from "./routes/UserRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
+import postCategoriesRoutes from "./routes/postCategoriesRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -30,6 +31,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", UserRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/api/post-categories", postCategoriesRoutes);
 
 // static assets
 const { __dirname } = getGlobals(import.meta.url);
