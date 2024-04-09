@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "fs/promises"; // Import the promise-based fs API
 import path from "path";
 
 import { getGlobals } from "common-es";
@@ -6,26 +6,26 @@ import { getGlobals } from "common-es";
 const { __dirname } = getGlobals(import.meta.url);
 
 /**
- * Function to remove a file from the filesystem.
+ * Function to remove a file from the filesystem asynchronously.
  */
-const fileRemover = (filename) => {
-  // Construct the absolute path to the file using __dirname and "../uploads"
+const fileRemover = async (filename) => {
+  // Construct the absolute path to the file
   const filePath = path.join(__dirname, "../uploads", filename);
 
-  // Remove the file from the filesystem
-  fs.unlink(filePath, function (err) {
-    if (err && err.code == "ENOENT") {
-      // If the file doesn't exist, log a message
+  try {
+    await fs.unlink(filePath); // Use await for async unlink operation
+    console.log(`Removed ${filename}`);
+  } catch (err) {
+    if (err.code === "ENOENT") {
       console.log(`File ${filename} doesn't exist, won't remove it.`);
-    } else if (err) {
-      // If an error occurs during file removal, log the error message
-      console.log(err.message);
-      console.log(`Error occurred while trying to remove file ${filename}`);
     } else {
-      // If file removal is successful, log a success message
-      console.log(`Removed ${filename}`);
+      console.error(
+        `Error occurred while trying to remove file ${filename}:`,
+        err
+      );
+      // Consider re-throwing or handling the error as needed
     }
-  });
+  }
 };
 
 export { fileRemover };

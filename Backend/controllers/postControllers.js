@@ -54,9 +54,10 @@ const updatePost = async (req, res, next) => {
       post.body = body || post.body;
       post.tags = tags || post.tags;
       post.categories = categories || post.categories;
+
       // Save the updated post to the database
       const updatedPost = await post.save();
-      return res.json(updatedPost);
+      return updatedPost;
     };
 
     // Use multer to handle file upload
@@ -67,24 +68,29 @@ const updatePost = async (req, res, next) => {
           "An unknown error occurred when uploading: " + err.message
         );
         next(error);
+        return; // Exit the callback function if there's an error
+      }
+
+      // If file upload is successful
+      if (req.file) {
+        // If a new file is uploaded, update the post's photo field
+        let filename = post.photo;
+        if (filename) {
+          await fileRemover(filename); // Wait for file removal to complete
+        }
+        post.photo = req.file.filename;
       } else {
-        // If file upload is successful
-        if (req.file) {
-          // If a new file is uploaded, update the post's photo field
-          let filename = post.photo;
-          if (filename) {
-            fileRemover(filename); // Remove the existing file if it exists
-          }
-          post.photo = req.file.filename;
-          handleUpdatePostData(req.body.document); // Update post data in the database
-        } else {
-          // If no file is uploaded, remove the existing file from the post
-          let filename = post.photo;
-          post.photo = "";
-          fileRemover(filename); // Remove the existing file
-          handleUpdatePostData(req.body.document); // Update post data in the database
+        // If no file is uploaded, remove the existing file from the post
+        let filename = post.photo;
+        post.photo = "";
+        if (filename) {
+          await fileRemover(filename); // Wait for file removal to complete
         }
       }
+
+      // Update post data in the database (ensure await)
+      const updatedPost = await handleUpdatePostData(req.body.document);
+      res.json(updatedPost);
     });
   } catch (error) {
     next(error);
@@ -202,6 +208,10 @@ const getAllPosts = async (req, res, next) => {
         {
           path: "user",
           select: ["avatar", "name", "verified"],
+        },
+        {
+          path: "categories",
+          select: ["title"],
         },
       ])
       .sort({ updatedAt: "desc" });

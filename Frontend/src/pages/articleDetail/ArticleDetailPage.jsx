@@ -13,7 +13,7 @@ import BreadCrumbs from "../../components/BreadCrumbs";
 import { images, stables } from "../../constants";
 import { getSinglePost, getAllPosts } from "../../services/index/posts";
 import ArticleDetailSkeleton from "./components/ArticleDetailSkeleton";
-import ErrorMessage from "../../components/ErrorMessage";
+import ErrorMessage from "../../components/Errormessage";
 import Editor from "../../components/editor/Editor";
 
 function ArticleDetailPage() {

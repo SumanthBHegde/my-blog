@@ -5,10 +5,14 @@ import {
   createComment,
   deleteComment,
   updateComment,
+  getAllComments,
 } from "../controllers/commentControllers.js";
-import { authGuard } from "../middleware/authMiddleware.js";
+import { authGuard, adminGuard } from "../middleware/authMiddleware.js";
 
-router.post("/", authGuard, createComment);
+router
+  .route("/")
+  .post(authGuard, createComment)
+  .get(authGuard, adminGuard, getAllComments);
 router
   .route("/:commentId")
   .put(authGuard, updateComment)

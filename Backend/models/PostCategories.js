@@ -1,4 +1,5 @@
-import { Schema, model } from "mongoose";
+import mongpkg from "mongoose";
+const { Schema, model } = mongpkg;
 
 const PostCategoriesSchema = new Schema(
   {

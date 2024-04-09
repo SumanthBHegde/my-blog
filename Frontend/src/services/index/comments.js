@@ -33,7 +33,7 @@ const createNewComment = async ({ token, desc, slug, parent, replyOnUser }) => {
 };
 
 // Function to update an existing comment
-const updateComment = async ({ token, desc, commentId }) => {
+const updateComment = async ({ token, desc, commentId, check }) => {
   try {
     // Set up request headers with authorization token
     const config = {
@@ -47,6 +47,7 @@ const updateComment = async ({ token, desc, commentId }) => {
       `/api/comments/${commentId}`,
       {
         desc,
+        check,
       },
       config
     );
@@ -84,5 +85,30 @@ const deleteComment = async ({ token, commentId }) => {
   }
 };
 
+const getAllComments = async (
+  token,
+  searchKeyword = "",
+  page = 1,
+  limit = 10
+) => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const { data, headers } = await axios.get(
+      `/api/comments?searchKeyword=${searchKeyword}&page=${page}&limit=${limit}`,
+      config
+    );
+    return { data, headers };
+  } catch (error) {
+    if (error.response && error.response.data.message)
+      throw new Error(error.response.data.message);
+    throw new Error(error.message);
+  }
+};
+
 // Export the functions as an object
-export { createNewComment, updateComment, deleteComment };
+export { createNewComment, updateComment, deleteComment, getAllComments };
