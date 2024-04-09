@@ -166,6 +166,8 @@ const getPost = async (req, res, next) => {
       return next(error);
     }
 
+    await fileRemover(post.photo);
+
     // Return the retrieved post as a JSON response
     return res.json(post);
   } catch (error) {

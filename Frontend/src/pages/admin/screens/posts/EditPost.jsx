@@ -20,7 +20,7 @@ import {
 
 // Function to fetch options for the CreatableSelect component
 const promiseOptions = async (inputValue) => {
-  const categoriesData = await getAllCategories();
+  const { data: categoriesData } = await getAllCategories();
   return filterCategories(inputValue, categoriesData);
 };
 

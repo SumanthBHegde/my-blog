@@ -33,7 +33,7 @@ const DataTable = ({
                   <input
                     type="text"
                     id='"form-subscribe-Filter'
-                    className="flex-1 w-full px-4 py-2 text-base text-gray-700 placeholder-gray-400 bg-white border border-transparent border-gray-300 rounded-lg shadow-sm appearance-none  focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                    className="flex-1 w-full px-4 py-2 text-base text-gray-700 placeholder-gray-400 bg-white border border-transparent border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                     placeholder={searchInputPlaceHolder}
                     onChange={searchKeywordOnChangeHandler}
                     value={searchKeyword}
@@ -53,8 +53,9 @@ const DataTable = ({
               <table className="min-w-full leading-normal">
                 <thead>
                   <tr>
-                    {tableHeaderTitleList.map((title) => (
+                    {tableHeaderTitleList.map((title, index) => (
                       <th
+                        key={index}
                         scope="col"
                         className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200"
                       >

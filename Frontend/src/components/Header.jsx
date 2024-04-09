@@ -10,7 +10,7 @@ import { images } from "../constants";
 
 const navItemsInfo = [
   { name: "Home", type: "link", href: "/" },
-  { name: "Article", type: "link", href: "/articles" },
+  { name: "Blogs", type: "link", href: "/blog" },
   {
     name: "Pages",
     type: "dropdown",

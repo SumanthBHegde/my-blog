@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
 import { AiFillDashboard, AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
-import { FaComments } from "react-icons/fa";
+import { FaComments, FaUser } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 
 import NavItem from "./NavItem";
@@ -139,7 +139,16 @@ const Header = () => {
                 >
                   Add New Post
                 </button>
+                <Link to="/admin/categories/manage">Categories</Link>
               </NavItemCollapse>
+              <NavItem
+                title="Users"
+                link="/admin/users/manage"
+                icon={<FaUser className="text-xl" />}
+                name="users"
+                activeNavName={activeNavName}
+                setActiveNavName={setActiveNavName}
+              />
             </div>
           </div>
         </div>

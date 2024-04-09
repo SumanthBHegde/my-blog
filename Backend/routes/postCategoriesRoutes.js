@@ -5,6 +5,7 @@ import {
   createPostCategory,
   deletePostCategory,
   getAllPostCategories,
+  getSingleCategory,
   updatePostCategory,
 } from "../controllers/postCategCont.js";
 
@@ -17,6 +18,7 @@ router
 
 router
   .route("/:postCategoryId")
+  .get(getSingleCategory)
   .put(authGuard, adminGuard, updatePostCategory)
   .delete(authGuard, adminGuard, deletePostCategory);
 
