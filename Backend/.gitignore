@@ -1,0 +1,15 @@
+#node modules
+node_modules
+
+#environment variables
+.env
+
+#package lock
+package-lock.json
+yarn.lock
+
+#data
+uploads
+
+#logs
+*.log
