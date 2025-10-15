@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../axios";
 
 // Helper function for retrying requests
 const retryRequest = async (fn, retries = 3, delay = 1000) => {

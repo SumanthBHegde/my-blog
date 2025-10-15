@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../axios";
 
 // Function to create a new comment
 const createNewComment = async ({ token, desc, slug, parent, replyOnUser }) => {
