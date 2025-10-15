@@ -1,9 +1,7 @@
-import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
 
 import { images, stables } from "../../../../constants";
 import { getAllPosts, deletePost } from "../../../../services/index/posts";
-import Pagination from "../../../../components/Pagination";
 import { useDataTable } from "../../../../hooks/useDataTable";
 import DataTable from "../../components/DataTable";
 
@@ -16,7 +14,6 @@ const ManagePosts = () => {
     isLoading,
     isFetching,
     isLoadingDeleteData,
-    queryClient,
     searchKeywordHandler,
     submitSearchKeywordHandler,
     deleteDataHandler,
@@ -51,7 +48,7 @@ const ManagePosts = () => {
       userState={userState}
     >
       {postsData?.data.map((post) => (
-        <tr>
+        <tr key={post._id}>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -68,12 +65,14 @@ const ManagePosts = () => {
                 </a>
               </div>
               <div className="ml-3">
-                <p className="text-gray-900 whitespace-no-wrap">{post.title}</p>
+                <p className="text-forest-800 whitespace-no-wrap">
+                  {post.title}
+                </p>
               </div>
             </div>
           </td>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">
+            <p className="text-forest-800 whitespace-no-wrap">
               {post.categories.length > 0
                 ? post.categories
                     .slice(0, 3)
@@ -89,7 +88,7 @@ const ManagePosts = () => {
             </p>
           </td>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">
+            <p className="text-forest-800 whitespace-no-wrap">
               {new Date(post.createdAt).toLocaleDateString("en-US", {
                 day: "numeric",
                 month: "short",
@@ -101,7 +100,7 @@ const ManagePosts = () => {
             <div className="flex gap-x-2">
               {post.tags.length > 0
                 ? post.tags.map((tag, index) => (
-                    <p>
+                    <p className="text-forest-800" key={index}>
                       {tag}
                       {post.tags.length - 1 !== index && ","}
                     </p>
@@ -113,7 +112,7 @@ const ManagePosts = () => {
             <button
               disabled={isLoadingDeleteData}
               type="button"
-              className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="text-red-700 hover:text-red-800 disabled:opacity-70 disabled:cursor-not-allowed"
               onClick={() => {
                 deleteDataHandler({
                   slug: post?.slug,
@@ -125,7 +124,7 @@ const ManagePosts = () => {
             </button>
             <Link
               to={`/admin/posts/manage/edit/${post?.slug}`}
-              className="text-green-600 hover:text-green-900"
+              className="text-forest-600 hover:text-forest-700"
             >
               Edit
             </Link>

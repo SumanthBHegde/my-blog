@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { useSearchParams } from "react-router-dom";
@@ -10,6 +10,7 @@ import ArticleCard from "../../components/Articlecard";
 import MainLayout from "../../components/MainLayout";
 import Pagination from "../../components/Pagination";
 import Search from "../../components/Search";
+import BreadCrumbs from "../../components/BreadCrumbs";
 
 let isFirstRun = true;
 
@@ -21,16 +22,18 @@ const BlogPage = () => {
   const currentPage = parseInt(searchParamsValue?.page) || 1;
   const searchKeyword = searchParamsValue?.search || "";
 
+  const breadCrumbsData = [
+    { name: "Home", link: "/" },
+    { name: "Blog", link: "/blog" },
+  ];
+
   const { data, isLoading, isError, isFetching, refetch } = useQuery({
     queryFn: () => getAllPosts(searchKeyword, currentPage, 12),
     queryKey: ["posts"],
     onError: (error) => {
       toast.error(error.message);
-      console.log(error);
     },
   });
-
-  console.log(data);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -52,8 +55,9 @@ const BlogPage = () => {
   return (
     <MainLayout>
       <section className="container flex flex-col px-5 py-10 mx-auto">
+        <BreadCrumbs data={breadCrumbsData} />
         <Search
-          className="w-full max-w-xl mb-10"
+          className="w-full max-w-xl my-10"
           onSearchKeyword={handleSearch}
         />
         <div className="flex flex-wrap pb-10 md:gap-x-5 gap-y-5">

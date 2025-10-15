@@ -15,7 +15,6 @@ const Articles = () => {
     queryKey: ["posts"],
     onError: (error) => {
       toast.error(error.message);
-      console.log(error);
     },
   });
 
@@ -43,10 +42,10 @@ const Articles = () => {
       </div>
       <Link
         to="/blog"
-        className="flex items-center px-6 py-3 mx-auto font-bold border-2 rounded-lg gap-x-2 text-primary border-primary"
+        className="group flex items-center px-6 py-3 mx-auto font-bold border-2 rounded-lg gap-x-2 text-forest-700 border-forest-300 hover:bg-forest-600 hover:text-white hover:border-forest-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
       >
         <span>More articles</span>
-        <FaArrowRight className="w-3 h-3" />
+        <FaArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
       </Link>
     </section>
   );

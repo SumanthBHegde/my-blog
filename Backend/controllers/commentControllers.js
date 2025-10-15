@@ -127,3 +127,4 @@ const getAllComments = async (req, res, next) => {
 };
 
 export { createComment, updateComment, deleteComment, getAllComments };
+

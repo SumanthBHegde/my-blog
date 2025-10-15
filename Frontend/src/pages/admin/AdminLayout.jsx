@@ -10,11 +10,7 @@ const AdminLayout = () => {
   const navigate = useNavigate();
   const userState = useSelector((state) => state.user);
 
-  const {
-    data: profileData,
-    isLoading: profileIsLoading,
-    error: profileError,
-  } = useQuery({
+  const { isLoading: profileIsLoading } = useQuery({
     queryFn: () => {
       return getUserProfile({ token: userState.userInfo.token });
     },
@@ -26,7 +22,6 @@ const AdminLayout = () => {
       }
     },
     onError: (err) => {
-      console.log(err);
       navigate("/");
       toast.error("Your are not allowed to access admin panel");
     },
@@ -34,16 +29,25 @@ const AdminLayout = () => {
 
   if (profileIsLoading) {
     return (
-      <div className="flex items-center justify-center w-full h-screen">
-        <h3 className="text-2xl text-slate-700">Loading...</h3>
+      <div className="flex items-center justify-center w-full h-screen bg-gradient-to-br from-forest-50 via-white to-earth-50">
+        <div className="text-center">
+          <div className="relative w-16 h-16 mx-auto mb-6">
+            <div className="absolute inset-0 border-4 border-forest-200 rounded-full"></div>
+            <div className="absolute inset-0 border-t-4 border-forest-600 rounded-full animate-spin"></div>
+          </div>
+          <h3 className="text-2xl font-bold text-forest-800">
+            Loading Admin Panel
+          </h3>
+          <p className="mt-2 text-sm text-forest-600">Please wait...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-screen lg:flex-row">
+    <div className="flex flex-col min-h-screen lg:flex-row bg-gradient-to-br from-forest-50/30 via-white to-earth-50/30">
       <Header />
-      <main className="bg-[#F9F9F9] flex-1 p-4 lg:p-6">
+      <main className="flex-1 min-h-screen p-4 lg:p-8 lg:min-h-full">
         <Outlet />
       </main>
     </div>

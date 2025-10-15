@@ -7,11 +7,15 @@ import {
   updateComment,
   getAllComments,
 } from "../controllers/commentControllers.js";
-import { authGuard, adminGuard } from "../middleware/authMiddleware.js";
+import {
+  authGuard,
+  adminGuard,
+  verifiedGuard,
+} from "../middleware/authMiddleware.js";
 
 router
   .route("/")
-  .post(authGuard, createComment)
+  .post(authGuard, verifiedGuard, createComment)
   .get(authGuard, adminGuard, getAllComments);
 router
   .route("/:commentId")
@@ -19,3 +23,4 @@ router
   .delete(authGuard, deleteComment);
 
 export default router;
+

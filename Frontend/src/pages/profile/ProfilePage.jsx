@@ -8,6 +8,7 @@ import { useMemo } from "react";
 
 import MainLayout from "../../components/MainLayout";
 import ProfilePicture from "../../components/ProfilePicture";
+import BreadCrumbs from "../../components/BreadCrumbs";
 
 import { userActions } from "../../store/reducers/userReducers";
 import { getUserProfile, updateProfile } from "../../services/index/users";
@@ -17,6 +18,11 @@ const ProfilePage = () => {
   const dispatch = useDispatch(); // Redux dispatch function
   const queryClient = useQueryClient(); // Query client for React Query
   const userState = useSelector((state) => state.user); // Select user state from Redux store
+
+  const breadCrumbsData = [
+    { name: "Home", link: "/" },
+    { name: "Profile", link: "/profile" },
+  ];
 
   // Fetching user profile data using React Query
   const { data: profileData, isLoading: profileIsLoading } = useQuery({
@@ -48,7 +54,6 @@ const ProfilePage = () => {
     onError: (error) => {
       // Show error toast notification
       toast.error(error.message);
-      console.log(error);
     },
   });
 
@@ -89,6 +94,7 @@ const ProfilePage = () => {
     <MainLayout>
       <section className="container px-5 py-10 mx-auto">
         <div className="w-full max-w-sm mx-auto">
+          <BreadCrumbs data={breadCrumbsData} />
           {/* Display user's profile picture */}
           <ProfilePicture avatar={profileData?.avatar} />
           <form onSubmit={handleSubmit(submitHandler)}>

@@ -17,3 +17,4 @@ router
   .get(getPost);
 
 export default router;
+

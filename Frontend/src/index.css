@@ -1,15 +1,319 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@tailwind utilities;
+:root {
+  /* Forest Comfy Color Theme */
+  --background: 120 100 96; /* Forest green background */
+  --foreground: 0 0 100; /* Pure white text */
+  --card: 0 0 100; /* White cards */
+  --card-foreground: 45 93 61; /* Forest green text on cards */
+  --popover: 0 0 100; /* White popovers */
+  --popover-foreground: 45 93 61; /* Forest green text */
+  --primary: 142 76 36; /* Dark forest green - keeping for compatibility */
+  --primary-foreground: 0 0 100; /* White text on dark primary */
+  --secondary: 143 188 143; /* Sage green secondary */
+  --secondary-foreground: 45 93 61; /* Forest green text on secondary */
+  --muted: 240 248 240; /* Light sage background */
+  --muted-foreground: 107 142 107; /* Muted forest green text */
+  --accent: 139 115 85; /* Warm brown accent */
+  --accent-foreground: 0 0 100; /* White text on accent */
+  --destructive: 220 38 38; /* Red for destructive actions */
+  --destructive-foreground: 0 0 100; /* White text */
+  --border: 197 225 197; /* Light sage borders */
+  --input: 240 248 240; /* Light sage input backgrounds */
+  --ring: 45 93 61; /* Forest green focus rings */
+  --radius: 0.75rem; /* Rounded corners */
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-primary font-sans antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Remove default focus outlines and replace with forest theme */
+  *:focus {
+    outline: none;
+  }
+
+  *:focus-visible {
+    outline: 2px solid #166534;
+    outline-offset: 2px;
+  }
+}
 
 @layer components {
+  /* Modern Button Styles */
+  .btn-primary {
+    @apply px-6 py-3 bg-forest-600 hover:bg-forest-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-forest-300;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-earth-50 text-forest-700 font-semibold rounded-xl shadow-lg border border-forest-200 hover:shadow-xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-forest-100;
+  }
+
+  .btn-ghost {
+    @apply px-6 py-3 text-forest-600 hover:text-forest-700 hover:bg-forest-50 font-semibold rounded-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-forest-100;
+  }
+
+  /* Card Styles */
+  .card-modern {
+    @apply bg-earth-50 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-forest-200/50 backdrop-blur-sm;
+  }
+
+  .card-glass {
+    @apply bg-earth-50/80 backdrop-blur-lg rounded-2xl shadow-xl border border-forest-200/20;
+  }
+
+  /* Input Styles */
+  .input-modern {
+    @apply w-full px-4 py-3 bg-earth-50 border border-forest-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-forest-100 focus:border-forest-400 transition-all duration-300 placeholder:text-forest-400;
+  }
+
+  /* Text Utilities */
+  .text-gradient {
+    @apply bg-gradient-to-r from-forest-600 via-forest-500 to-earth-600 bg-clip-text text-transparent;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Animation Classes */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+
+  .animate-bounce-gentle {
+    animation: bounceGentle 2s infinite;
+  }
+
+  /* Modern Editor Button Styles - Forest Theme */
   .editor-btn {
-    @apply flex justify-center items-center text-slate-700 rounded-lg w-8 aspect-square;
+    @apply flex justify-center items-center text-forest-700 rounded-lg w-9 h-9 transition-all duration-200 hover:bg-forest-50 hover:text-forest-800 border border-transparent hover:border-forest-200 hover:shadow-sm disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent;
   }
 
   .active-editor-btn {
-    @apply text-slate-800 bg-slate-200;
+    @apply text-white bg-forest-600 shadow-md border-forest-600 hover:bg-forest-700 hover:border-forest-700;
+  }
+}
+
+@layer utilities {
+  /* Custom scrollbar */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(203 213 225) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgb(203 213 225);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(148 163 184);
+  }
+
+  /* Glass effect */
+  .glass {
+    @apply bg-white/10 backdrop-blur-lg border border-white/20;
+  }
+
+  /* Gradient backgrounds */
+  .bg-gradient-primary {
+    @apply bg-gradient-to-r from-forest-600 to-forest-700;
+  }
+
+  .bg-gradient-secondary {
+    @apply bg-gradient-to-r from-forest-100 to-forest-200;
+  }
+}
+
+/* Keyframe animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceGentle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Responsive typography */
+@media (max-width: 640px) {
+  .text-responsive-xl {
+    @apply text-2xl;
+  }
+
+  .text-responsive-2xl {
+    @apply text-3xl;
+  }
+
+  .text-responsive-3xl {
+    @apply text-4xl;
+  }
+}
+
+@media (min-width: 641px) {
+  .text-responsive-xl {
+    @apply text-3xl;
+  }
+
+  .text-responsive-2xl {
+    @apply text-4xl;
+  }
+
+  .text-responsive-3xl {
+    @apply text-5xl;
+  }
+}
+
+/* Override default focus colors to use theme colors */
+@layer utilities {
+  .focus\:ring-primary:focus {
+    --tw-ring-color: #166534;
+  }
+
+  .focus\:ring-forest:focus {
+    --tw-ring-color: #166534;
+  }
+
+  /* Ensure all buttons use primary color when no specific color is set */
+  button:not([class*="bg-"]):not([class*="text-"]) {
+    @apply bg-primary text-white hover:bg-forest-700;
+  }
+
+  /* Remove any default yellow or colored focus outlines */
+  button:focus,
+  a:focus,
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none !important;
+    box-shadow: none;
+  }
+
+  /* Ensure form elements use theme colors */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    @apply ring-2 ring-forest-600 border-forest-600;
+    outline: none !important;
+  }
+
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid #166534 !important;
+    outline-offset: 2px;
+  }
+}
+
+/* Global Yellow Color Override */
+/* Override any yellow colors (#ffff00, yellow, etc.) with primary theme color */
+@layer utilities {
+  .text-yellow-50,
+  .text-yellow-100,
+  .text-yellow-200,
+  .text-yellow-300,
+  .text-yellow-400,
+  .text-yellow-500,
+  .text-yellow-600,
+  .text-yellow-700,
+  .text-yellow-800,
+  .text-yellow-900 {
+    color: #166534; /* Dark forest green primary */
+  }
+
+  .bg-yellow-50,
+  .bg-yellow-100,
+  .bg-yellow-200,
+  .bg-yellow-300,
+  .bg-yellow-400,
+  .bg-yellow-500,
+  .bg-yellow-600,
+  .bg-yellow-700,
+  .bg-yellow-800,
+  .bg-yellow-900 {
+    background-color: #166534; /* Dark forest green primary */
+  }
+
+  .border-yellow-50,
+  .border-yellow-100,
+  .border-yellow-200,
+  .border-yellow-300,
+  .border-yellow-400,
+  .border-yellow-500,
+  .border-yellow-600,
+  .border-yellow-700,
+  .border-yellow-800,
+  .border-yellow-900 {
+    border-color: #166534; /* Dark forest green primary */
+  }
+
+  /* Override hardcoded yellow colors */
+  [style*="color: #ffff00"],
+  [style*="color: yellow"],
+  [style*="color: #ffff99"],
+  [style*="color: #ffffcc"],
+  [style*="background-color: #ffff00"],
+  [style*="background-color: yellow"] {
+    color: #166534 !important; /* Dark forest green primary */
+    background-color: #166534 !important; /* Dark forest green primary */
   }
 }

@@ -27,7 +27,6 @@ const Categories = () => {
       },
       onError: (error) => {
         toast.error(error.message);
-        console.log(error);
       },
     });
 
@@ -66,11 +65,13 @@ const Categories = () => {
   return (
     <div className="grid grid-cols-12 gap-x-4">
       <div className="col-span-4 py-8">
-        <h4 className="text-lg leading-tight">Add New Category</h4>
-        <div className="w-full mt-6 d-form-control">
+        <h4 className="text-lg leading-tight text-forest-800">
+          Add New Category
+        </h4>
+        <div className="w-full mt-6">
           <input
             value={categoryTitle}
-            className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-xl font-medium font-roboto text-dark-hard"
+            className="w-full px-4 py-3 bg-earth-50 border border-forest-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-forest-100 focus:border-forest-400 transition-all duration-300 placeholder:text-forest-400 text-xl font-medium font-roboto text-forest-800"
             onChange={(e) => seTcategoryTitle(e.target.value)}
             placeholder="category title"
           />
@@ -78,7 +79,7 @@ const Categories = () => {
             disabled={isLoadingCreateCategory}
             type="button"
             onClick={handleCreateCategory}
-            className="px-4 py-2 mt-3 font-semibold text-white bg-green-500 rounded-lg w-fit disabled:cursor-not-allowed disabled:opacity-70"
+            className="px-4 py-2 mt-3 font-semibold text-white bg-forest-600 rounded-lg w-fit disabled:cursor-not-allowed disabled:opacity-70"
           >
             Add Category
           </button>
@@ -102,16 +103,16 @@ const Categories = () => {
           userState={userState}
         >
           {categoriesData?.data.map((category) => (
-            <tr>
+            <tr key={category._id}>
               <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
                 <div className="flex items-center">
-                  <p className="text-gray-900 whitespace-no-wrap">
+                  <p className="text-forest-800 whitespace-no-wrap">
                     {category.title}
                   </p>
                 </div>
               </td>
               <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                <p className="text-gray-900 whitespace-no-wrap">
+                <p className="text-forest-800 whitespace-no-wrap">
                   {new Date(category.createdAt).toLocaleDateString("en-US", {
                     day: "numeric",
                     month: "short",
@@ -123,7 +124,7 @@ const Categories = () => {
                 <button
                   disabled={isLoadingDeleteData}
                   type="button"
-                  className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="text-red-700 hover:text-red-800 disabled:opacity-70 disabled:cursor-not-allowed"
                   onClick={() => {
                     deleteDataHandler({
                       slug: category?._id,
@@ -135,7 +136,7 @@ const Categories = () => {
                 </button>
                 <Link
                   to={`/admin/categories/manage/edit/${category?._id}`}
-                  className="text-green-600 hover:text-green-900"
+                  className="text-forest-600 hover:text-forest-700"
                 >
                   Edit
                 </Link>

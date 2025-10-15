@@ -10,3 +10,4 @@ const PostCategoriesSchema = new Schema(
 
 const PostCategories = model("PostCategories", PostCategoriesSchema);
 export default PostCategories;
+

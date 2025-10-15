@@ -39,10 +39,7 @@ const Comments = () => {
     },
   });
 
-  const {
-    mutate: mutateUpdateCommentCheck,
-    isLoading: isLoadingUpdateCommentCheck,
-  } = useMutation({
+  const { mutate: mutateUpdateCommentCheck } = useMutation({
     mutationFn: ({ token, check, commentId }) => {
       return updateComment({ token, check, commentId });
     },
@@ -54,7 +51,6 @@ const Comments = () => {
     },
     onError: (error) => {
       toast.error(error.message);
-      console.log(error);
     },
   });
 
@@ -81,7 +77,7 @@ const Comments = () => {
       headers={commentsData?.headers}
     >
       {commentsData?.data.map((comment) => (
-        <tr>
+        <tr key={comment._id}>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -98,7 +94,7 @@ const Comments = () => {
                 </a>
               </div>
               <div className="ml-3">
-                <p className="text-gray-900 whitespace-no-wrap">
+                <p className="whitespace-no-wrap text-forest-800">
                   {comment?.user?.name}
                 </p>
               </div>
@@ -106,30 +102,32 @@ const Comments = () => {
           </td>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
             {comment?.replyOnUser !== null && (
-              <p className="text-gray-900 whitespace-no-wrap">
+              <p className="whitespace-no-wrap text-forest-800">
                 In reply to{" "}
                 <Link
                   to={`/blog/${comment?.post?.slug}/#comment-${comment?._id}`}
-                  className="text-blue-500"
+                  className="text-primary hover:text-forest-700"
                 >
                   {comment?.replyOnUser?.name}
                 </Link>
               </p>
             )}
-            <p className="text-gray-900 whitespace-no-wrap">{comment?.desc}</p>
+            <p className="whitespace-no-wrap text-forest-800">
+              {comment?.desc}
+            </p>
           </td>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
             <p className="text-gray-900 whitespace-no-wrap">
               <Link
                 to={`/blog/${comment?.post?.slug}`}
-                className="text-blue-500"
+                className="text-primary hover:text-forest-700"
               >
                 {comment?.post?.title}
               </Link>
             </p>
           </td>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">
+            <p className="whitespace-no-wrap text-forest-800">
               {new Date(comment.createdAt).toLocaleDateString("en-US", {
                 day: "2-digit",
                 month: "2-digit",
@@ -145,8 +143,8 @@ const Comments = () => {
               type="button"
               className={`${
                 comment?.check
-                  ? "text-yellow-600 hover:text-yellow-900"
-                  : "text-green-600 hover:text-green-900"
+                  ? "text-forest-600 hover:text-forest-900"
+                  : "text-primary hover:text-forest-700"
               } disabled:opacity-70 disabled:cursor-not-allowed`}
               onClick={() => {
                 mutateUpdateCommentCheck({
@@ -161,7 +159,7 @@ const Comments = () => {
             <button
               disabled={isLoadingDeleteData}
               type="button"
-              className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="text-red-700 hover:text-red-800 disabled:opacity-70 disabled:cursor-not-allowed"
               onClick={() => {
                 deleteDataHandler({
                   slug: comment?._id,

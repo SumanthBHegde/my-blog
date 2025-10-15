@@ -36,7 +36,6 @@ const CropEasy = ({ photo, setOpenCrop }) => {
     onError: (error) => {
       // Show error toast notification
       toast.error(error.message);
-      console.log(error);
     },
   });
 
@@ -70,7 +69,6 @@ const CropEasy = ({ photo, setOpenCrop }) => {
     } catch (error) {
       // Show error toast notification
       toast.error(error.message);
-      console.log(error);
     }
   };
 

@@ -48,7 +48,6 @@ const Header = () => {
       onError: (error) => {
         // Show an error toast if the mutation fails
         toast.error(error.message);
-        console.log(error);
       },
     });
 
@@ -72,7 +71,7 @@ const Header = () => {
   };
 
   return (
-    <header className="flex h-fit w-full items-center justify-between p-4 bg-gradient-to-r from-stone-100 to-lime-100 lg:h-full lg:max-w-[300px] lg:flex-col lg:items-start lg:justify-start lg:p-0 ">
+    <header className="flex h-fit w-full items-center justify-between p-4 bg-white border-b-2 border-forest-200 shadow-sm lg:min-h-screen lg:max-w-[300px] lg:flex-col lg:items-start lg:justify-start lg:p-0 lg:border-r-2 lg:border-b-0 lg:shadow-xl">
       {/* Logo */}
       <Link to="/">
         <img src={images.logo} alt="logo" className="w-32 lg:hidden" />
@@ -80,27 +79,40 @@ const Header = () => {
       {/* Menu burger icon */}
       <div className="cursor-pointer lg:hidden">
         {isMenuActive ? (
-          <AiOutlineClose className="w-6 h-6" onClick={toggleMenuHandler} />
+          <AiOutlineClose
+            className="w-6 h-6 transition-colors text-forest-700 hover:text-forest-900"
+            onClick={toggleMenuHandler}
+          />
         ) : (
-          <AiOutlineMenu className="w-6 h-6" onClick={toggleMenuHandler} />
+          <AiOutlineMenu
+            className="w-6 h-6 transition-colors text-forest-700 hover:text-forest-900"
+            onClick={toggleMenuHandler}
+          />
         )}
       </div>
       {/* Sidebar container */}
       {isMenuActive && (
-        <div className="fixed inset-0 lg:static lg:h-full lg:w-full">
+        <div className="fixed inset-0 lg:static lg:min-h-screen lg:w-full">
           {/* Underlay */}
           <div
-            className="fixed inset-0 bg-black opacity-50 lg:hidden"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm lg:hidden"
             onClick={toggleMenuHandler}
           />
           {/* Sidebar */}
-          <div className="fixed top-0 bottom-0 left-0 z-50 w-3/4 p-4 overflow-y-auto bg-white lg:static lg:h-full lg:w-full lg:p-6 lg:bg-gradient-to-b from-stone-100 to-lime-100">
-            <Link to="/">
-              <img src={images.logo} alt="logo" className="w-32" />
+          <div className="fixed top-0 bottom-0 left-0 z-50 w-3/4 p-6 overflow-y-auto bg-gradient-to-b from-white via-forest-50/30 to-forest-50 shadow-2xl lg:static lg:min-h-screen lg:w-full lg:p-6">
+            <Link to="/" className="block mb-8">
+              <img
+                src={images.logo}
+                alt="logo"
+                className="w-32 transition-transform hover:scale-105"
+              />
             </Link>
-            <h4 className="mt-10 font-bold text-[#C7C7C7]">MAIN MENU</h4>
+            <h4 className="mt-10 mb-2 text-xs font-bold tracking-wider uppercase text-forest-600">
+              Main Menu
+            </h4>
+            <div className="w-12 h-1 mb-6 rounded-full bg-gradient-to-r from-forest-600 to-forest-400"></div>
             {/* Menu items */}
-            <div className="mt-6 flex flex-col gap-y-[0.563rem]">
+            <div className="mt-6 flex flex-col gap-y-1">
               {/* Dashboard item */}
               <NavItem
                 title="Dashboard"
@@ -128,18 +140,31 @@ const Header = () => {
                 setActiveNavName={setActiveNavName}
               >
                 {/* Link to manage all posts */}
-                <Link to="/admin/posts/manage">Manage all posts</Link>
+                <Link
+                  to="/admin/posts/manage"
+                  className="pl-8 py-2 text-sm transition-all duration-200 text-forest-700 hover:text-forest-900 hover:bg-forest-50 rounded-lg flex items-center gap-2"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-forest-400"></span>
+                  Manage all posts
+                </Link>
                 {/* Button to add a new post */}
                 <button
                   disabled={isLoadingCreatePost}
-                  className="text-start disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="pl-8 py-2 text-sm text-start transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-forest-700 hover:text-forest-900 hover:bg-forest-50 rounded-lg flex items-center gap-2"
                   onClick={() =>
                     handleCreateNewPost({ token: userState.userInfo.token })
                   }
                 >
+                  <span className="w-1.5 h-1.5 rounded-full bg-forest-400"></span>
                   Add New Post
                 </button>
-                <Link to="/admin/categories/manage">Categories</Link>
+                <Link
+                  to="/admin/categories/manage"
+                  className="pl-8 py-2 text-sm transition-all duration-200 text-forest-700 hover:text-forest-900 hover:bg-forest-50 rounded-lg flex items-center gap-2"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-forest-400"></span>
+                  Categories
+                </Link>
               </NavItemCollapse>
               <NavItem
                 title="Users"

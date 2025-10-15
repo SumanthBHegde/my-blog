@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
@@ -13,6 +13,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userState = useSelector((state) => state.user);
+  const [currentEmail, setCurrentEmail] = useState("");
 
   // Mutation hook for handling login request
   const { mutate, isLoading } = useMutation({
@@ -20,6 +21,15 @@ const LoginPage = () => {
       return login({ email, password });
     },
     onSuccess: (data) => {
+      if (data.verified === false) {
+        // User not verified, redirect to verification page
+        localStorage.setItem("verificationEmail", data.email || currentEmail);
+        toast.error("Please verify your email before logging in");
+        navigate("/verify-email", {
+          state: { email: data.email || currentEmail },
+        });
+        return;
+      }
       // Dispatch action to store user info and save to local storage
       dispatch(userActions.setUserInfo(data));
       localStorage.setItem("account", JSON.stringify(data));
@@ -27,7 +37,6 @@ const LoginPage = () => {
     onError: (error) => {
       // Display error toast message
       toast.error(error.message);
-      console.log(error);
     },
   });
 
@@ -54,6 +63,7 @@ const LoginPage = () => {
   // Form submit handler
   const submitHandler = (data) => {
     const { email, password } = data;
+    setCurrentEmail(email);
     mutate({ email, password });
   };
 

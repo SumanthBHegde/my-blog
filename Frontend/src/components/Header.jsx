@@ -2,30 +2,26 @@ import React, { useState } from "react";
 import { IoMdMenu, IoMdClose, IoMdArrowDown } from "react-icons/io";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-//reducer actions
+// Redux actions for user authentication
 import { logout } from "../store/actions/userActions";
 
 import { images } from "../constants";
 
+// Navigation items configuration for the header menu
+// Each item can be a link or a dropdown with sub-items
 const navItemsInfo = [
-  { name: "Home", type: "link", href: "/" },
-  { name: "Blogs", type: "link", href: "/blog" },
-  {
-    name: "Pages",
-    type: "dropdown",
-    items: [
-      { title: "About Us", href: "/about" },
-      { title: "Contact Us", href: "contact" },
-    ],
-  },
-  { name: "Faq", type: "link", href: "/faq" },
-  { name: "Pricing", type: "link", href: "/pricing" },
+  { name: "Bhāga", type: "link", href: "/blog" },
+  { name: "About Us", type: "link", href: "/about" },
+  { name: "Contact Us", type: "link", href: "/contact" },
 ];
 
+// Component for individual navigation items (link or dropdown)
 const NavItem = ({ item }) => {
   const [dropdown, setDropdown] = useState(false);
 
+  // Handler to toggle dropdown visibility
   const toggleDropdownHandler = () => {
     setDropdown((prevState) => !prevState);
   };
@@ -34,33 +30,40 @@ const NavItem = ({ item }) => {
     <li className="relative group">
       {item.type === "link" ? (
         <>
-          <Link to={item.href} className="px-4 py-2">
+          <Link
+            to={item.href}
+            className="relative px-4 py-2 font-medium transition-all duration-300 text-forest-700 hover:text-forest-600 hover:scale-105"
+          >
             {item.name}
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-forest-600 to-forest-500 transition-all duration-300 group-hover:w-full"></span>
           </Link>
-          <span className="cursor-pointer text-blue-500 absolute transition-all duration-500 font-bold right-0 top-0 group-hover:right-[90%] opacity-0 group-hover:opacity-100">
-            |
-          </span>
         </>
       ) : (
-        <div className="flex flex-col items-center">
+        <div className="relative">
           <button
-            className="flex items-center px-4 py-2 gap-x-1"
+            className="flex items-center px-4 py-2 font-medium transition-all duration-300 text-forest-700 hover:text-forest-600 gap-x-1"
             onClick={toggleDropdownHandler}
           >
             <span>{item.name}</span>
-            <IoMdArrowDown />
+            <IoMdArrowDown
+              className={`transition-transform duration-300 ${
+                dropdown ? "rotate-180" : ""
+              }`}
+            />
           </button>
           <div
             className={`${
-              dropdown ? "block" : "hidden"
-            } lg:hidden transition-all duration-500 pt-4 lg:absolute lg:bottom-0 lg:right-0 lg:transform lg:translate-y-full lg:group-hover:block w-max`}
+              dropdown
+                ? "opacity-100 visible translate-y-0"
+                : "opacity-0 invisible -translate-y-2"
+            } absolute top-full left-0 mt-2 w-48 bg-white/95 backdrop-blur-lg rounded-xl shadow-xl border border-slate-200/50 transition-all duration-300 z-50`}
           >
-            <ul className="flex flex-col overflow-hidden text-center rounded-lg shadow-lg bg-dark-soft lg:bg-white">
+            <ul className="py-2">
               {item.items.map((page, index) => (
                 <Link
                   to={page.href}
                   key={index}
-                  className="px-4 py-2 text-white hover:bg-dark-hard hover:text-white lg:text-dark-hard"
+                  className="block px-4 py-3 transition-all duration-200 text-forest-700 hover:bg-gradient-to-r hover:from-forest-50 hover:to-forest-100 hover:text-forest-600"
                 >
                   {page.title}
                 </Link>
@@ -93,88 +96,180 @@ const Header = () => {
 
   return (
     <section className="sticky top-0 left-0 right-0 z-50">
-      <header className="container flex items-center justify-between px-5 py-4 mx-auto bg-gradient-to-r from-stone-100 to-lime-100">
-        <Link to="/" className="relative overflow-hidden">
-          <img
-            className="object-cover rounded-2xl backdrop-blur-sm"
-            src={images.logo}
-            alt="logo"
-          />
-        </Link>
-        <div className="z-50 lg:hidden">
-          {navIsVisible ? (
-            <IoMdClose className="w-6 h-6" onClick={navVisibilityHandler} />
-          ) : (
-            <IoMdMenu className="w-6 h-6" onClick={navVisibilityHandler} />
-          )}
-        </div>
-        <div
-          className={`${
-            navIsVisible ? "right-0" : "-right-full"
-          } bg-dark-hard lg:bg-transparent transition-all duration-300 mt-[56px] lg:mt-0 z-49 flex flex-col w-full lg:w-auto justify-center lg:justify-end  lg:flex-row fixed top-0 bottom-0 lg:static gap-x-9 items-center`}
-        >
-          <ul className="flex flex-col items-center font-semibold text-white gap-y-5 lg:text-dark-soft lg:flex-row gap-x-2">
-            {navItemsInfo.map((item) => (
-              <NavItem key={item.name} item={item} />
-            ))}
-          </ul>
-          {userState.userInfo ? (
-            <div className="flex flex-col items-center font-semibold text-white gap-y-5 lg:text-dark-soft lg:flex-row gap-x-2">
+      <header className="border-b shadow-sm bg-white/80 backdrop-blur-lg border-slate-200/50">
+        <div className="container flex items-center justify-between px-5 py-4 mx-auto">
+          <Link to="/" className="relative overflow-hidden group">
+            <img
+              className="object-cover transition-transform duration-300 shadow-lg rounded-xl group-hover:scale-105"
+              src={images.logo}
+              alt="logo"
+            />
+          </Link>
+
+          {/* Mobile Menu Button */}
+          <div className="lg:hidden">
+            <button
+              onClick={navVisibilityHandler}
+              className="p-2 transition-all duration-200 transform rounded-lg bg-slate-100 hover:bg-forest-100 hover:shadow-md hover:scale-105"
+            >
+              {navIsVisible ? (
+                <IoMdClose className="w-6 h-6 transition-colors duration-200 text-slate-700 hover:text-forest-700" />
+              ) : (
+                <IoMdMenu className="w-6 h-6 transition-colors duration-200 text-slate-700 hover:text-forest-700" />
+              )}
+            </button>
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="items-center hidden space-x-8 lg:flex">
+            <ul className="flex items-center space-x-6">
+              {navItemsInfo.map((item) => (
+                <NavItem key={item.name} item={item} />
+              ))}
+            </ul>
+
+            {userState.userInfo ? (
               <div className="relative group">
-                <div className="flex flex-col items-center">
-                  <button
-                    className="flex items-center px-6 py-2 mt-5 font-semibold text-blue-500 transition-all duration-300 border-2 border-blue-500 rounded-full gap-x-1 lg:mt-0 hover:bg-blue-500 hover:text-white"
-                    onClick={() => setProfileDrowpdown(!profileDrowpdown)}
-                  >
-                    <span>Account</span>
-                    <IoMdArrowDown />
-                  </button>
-                  <div
-                    className={`${
-                      profileDrowpdown ? "block" : "hidden"
-                    } lg:hidden transition-all duration-500 pt-4 lg:absolute lg:bottom-0 lg:right-0 lg:transform lg:translate-y-full lg:group-hover:block w-max`}
-                  >
-                    <ul className="flex flex-col overflow-hidden text-center rounded-lg shadow-lg bg-dark-soft lg:bg-transparent">
-                      {userState?.userInfo?.admin && (
-                        <button
-                          onClick={() => navigate("/admin")}
-                          type="button"
-                          className="px-4 py-2 text-white hover:bg-dark-hard hover:text-white lg:text-dark-soft"
-                        >
-                          Admin Dashboard
-                        </button>
-                      )}
+                <button
+                  className="flex items-center px-6 py-2.5 bg-gradient-to-r from-forest-600 to-forest-700 text-white font-semibold rounded-full hover:from-forest-700 hover:to-forest-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 gap-x-2"
+                  onClick={() => setProfileDrowpdown(!profileDrowpdown)}
+                >
+                  <span>Account</span>
+                  <IoMdArrowDown
+                    className={`transition-transform duration-300 ${
+                      profileDrowpdown ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                <div
+                  className={`${
+                    profileDrowpdown
+                      ? "opacity-100 visible translate-y-0"
+                      : "opacity-0 invisible -translate-y-2"
+                  } absolute top-full right-0 mt-3 w-56 bg-white/95 backdrop-blur-lg rounded-xl shadow-xl border border-slate-200/50 transition-all duration-300 z-50`}
+                >
+                  <ul className="py-2">
+                    {userState?.userInfo?.admin && (
                       <button
-                        onClick={() => navigate("/profile")}
+                        onClick={() => navigate("/admin")}
                         type="button"
-                        className="px-4 py-2 text-white hover:bg-dark-hard hover:text-white lg:text-dark-soft"
+                        className="w-full px-4 py-3 text-left transition-all duration-200 text-slate-700 hover:bg-gradient-to-r hover:from-forest-50 hover:to-forest-100 hover:text-forest-600"
                       >
-                        Profile
+                        Admin Dashboard
                       </button>
-                      <button
-                        onClick={logoutHandler}
-                        type="button"
-                        className="px-4 py-2 text-white hover:bg-dark-hard hover:text-white lg:text-dark-soft"
-                      >
-                        Logout
-                      </button>
-                    </ul>
-                  </div>
+                    )}
+                    <button
+                      onClick={() => navigate("/profile")}
+                      type="button"
+                      className="w-full px-4 py-3 text-left transition-all duration-200 text-slate-700 hover:bg-gradient-to-r hover:from-forest-50 hover:to-forest-100 hover:text-forest-600"
+                    >
+                      Profile
+                    </button>
+                    <button
+                      onClick={logoutHandler}
+                      type="button"
+                      className="w-full px-4 py-3 text-left transition-all duration-200 text-slate-700 hover:bg-red-50 hover:text-red-600"
+                    >
+                      Logout
+                    </button>
+                  </ul>
                 </div>
               </div>
+            ) : (
+              <button
+                onClick={() => navigate("/login")}
+                className="px-6 py-2.5 bg-gradient-to-r from-forest-600 to-forest-700 text-white font-semibold rounded-full hover:from-forest-700 hover:to-forest-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                Sign in
+              </button>
+            )}
+          </div>
+
+          {/* Mobile Navigation */}
+          <div
+            className={`${
+              navIsVisible
+                ? "translate-x-0 opacity-100"
+                : "translate-x-full opacity-0"
+            } fixed inset-0 z-40 lg:hidden transition-all duration-300`}
+          >
+            <div
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={navVisibilityHandler}
+            ></div>
+            <div className="absolute top-0 right-0 h-full bg-white shadow-2xl w-80">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-xl font-bold text-slate-800">Menu</h2>
+                  <button
+                    onClick={navVisibilityHandler}
+                    className="p-2 transition-all duration-200 transform rounded-lg hover:bg-forest-50 hover:shadow-md hover:scale-105"
+                  >
+                    <IoMdClose className="w-6 h-6 transition-colors duration-200 text-slate-700 hover:text-forest-700" />
+                  </button>
+                </div>
+
+                <ul className="mb-8 space-y-4">
+                  {navItemsInfo.map((item) => (
+                    <NavItem key={item.name} item={item} />
+                  ))}
+                </ul>
+
+                {userState.userInfo ? (
+                  <div className="space-y-4">
+                    {userState?.userInfo?.admin && (
+                      <button
+                        onClick={() => navigate("/admin")}
+                        type="button"
+                        className="w-full px-4 py-3 text-left transition-all duration-200 transform rounded-lg text-slate-700 hover:bg-forest-50 hover:text-forest-700 hover:translate-x-1"
+                      >
+                        Admin Dashboard
+                      </button>
+                    )}
+                    <button
+                      onClick={() => navigate("/profile")}
+                      type="button"
+                      className="w-full px-4 py-3 text-left transition-all duration-200 transform rounded-lg text-slate-700 hover:bg-forest-50 hover:text-forest-700 hover:translate-x-1"
+                    >
+                      Profile
+                    </button>
+                    <button
+                      onClick={logoutHandler}
+                      type="button"
+                      className="w-full px-4 py-3 text-left text-red-600 transition-all duration-200 transform rounded-lg hover:bg-red-50 hover:text-red-700 hover:translate-x-1"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => navigate("/login")}
+                    className="w-full px-6 py-3 font-semibold text-white transition-all duration-300 rounded-lg shadow-lg bg-gradient-to-r from-forest-600 to-forest-700 hover:from-forest-700 hover:to-forest-800"
+                  >
+                    Sign in
+                  </button>
+                )}
+              </div>
             </div>
-          ) : (
-            <button
-              onClick={() => navigate("/login")}
-              className="px-6 py-2 mt-5 font-semibold text-blue-500 transition-all duration-300 border-2 border-blue-500 rounded-full lg:mt-0 hover:bg-blue-500 hover:text-white"
-            >
-              Sign in
-            </button>
-          )}
+          </div>
         </div>
       </header>
     </section>
   );
+};
+
+NavItem.propTypes = {
+  item: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(["link", "dropdown"]).isRequired,
+    href: PropTypes.string,
+    items: PropTypes.arrayOf(
+      PropTypes.shape({
+        title: PropTypes.string.isRequired,
+        href: PropTypes.string.isRequired,
+      })
+    ),
+  }).isRequired,
 };
 
 export default Header;

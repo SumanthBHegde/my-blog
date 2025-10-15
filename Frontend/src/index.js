@@ -17,7 +17,7 @@ const queryClient = new QueryClient({
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter>
+  <BrowserRouter future={{ v7_startTransition: true }}>
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <App />

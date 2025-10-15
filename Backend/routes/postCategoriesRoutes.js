@@ -23,3 +23,4 @@ router
   .delete(authGuard, adminGuard, deletePostCategory);
 
 export default router;
+

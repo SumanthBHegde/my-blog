@@ -53,7 +53,6 @@ const Users = () => {
       },
       onError: (error) => {
         toast.error(error.message);
-        console.log(error);
       },
     });
 
@@ -111,15 +110,17 @@ const Users = () => {
                 </a>
               </div>
               <div className="ml-3">
-                <p className="text-gray-900 whitespace-no-wrap">{user.name}</p>
+                <p className="text-forest-800 whitespace-no-wrap">
+                  {user.name}
+                </p>
               </div>
             </div>
           </td>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">{user.email}</p>
+            <p className="text-forest-800 whitespace-no-wrap">{user.email}</p>
           </td>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">
+            <p className="text-forest-800 whitespace-no-wrap">
               {new Date(user.createdAt).toLocaleDateString("en-US", {
                 day: "numeric",
                 month: "short",
@@ -128,14 +129,14 @@ const Users = () => {
             </p>
           </td>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">
+            <p className="text-forest-800 whitespace-no-wrap">
               {user.verified ? "✅" : "❌"}
             </p>
           </td>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
             <input
               type="checkbox"
-              className="d-checkbox disabled:bg-orange-400 disabled:opacity-100 checked:bg-[url('../public/images/check.png')] bg-cover checked:disabled:bg-none"
+              className="w-5 h-5 text-forest-600 bg-white border-2 border-forest-300 rounded focus:ring-forest-500 focus:ring-2 checked:bg-forest-600 checked:border-forest-600 disabled:bg-forest-200 disabled:opacity-50"
               defaultChecked={user.admin}
               onChange={(event) => handleAdminCheck(event, user._id)}
               disabled={isLoadingUpdateUser}
@@ -145,7 +146,7 @@ const Users = () => {
             <button
               disabled={isLoadingDeleteData}
               type="button"
-              className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="text-red-700 hover:text-red-800 disabled:opacity-70 disabled:cursor-not-allowed"
               onClick={() => {
                 deleteDataHandler({
                   slug: user?._id,

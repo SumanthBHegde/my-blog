@@ -1,7 +1,7 @@
-import express, { request } from "express";
+import express from "express";
 import dotenv from "dotenv";
 import path from "path";
-import { getGlobals } from "common-es";
+import { fileURLToPath } from "url";
 import cors from "cors";
 
 import connectDB from "./config/db.js";
@@ -20,9 +20,7 @@ dotenv.config();
 connectDB();
 const app = express();
 app.use(express.json());
-app.use(cors);
-
-console.log("check");
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("Server is running...");
@@ -34,7 +32,8 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/post-categories", postCategoriesRoutes);
 
 // static assets
-const { __dirname } = getGlobals(import.meta.url);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 //error handlers
@@ -43,4 +42,6 @@ app.use(invalidPathHandler);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

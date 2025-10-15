@@ -137,3 +137,32 @@ export const deleteUser = async ({ slug, token }) => {
     throw new Error(error.message);
   }
 };
+
+//resend verification code
+export const resendVerificationCode = async ({ email }) => {
+  try {
+    const { data } = await axios.post("/api/users/resend-verification", {
+      email,
+    });
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data.message)
+      throw new Error(error.response.data.message);
+    throw new Error(error.message);
+  }
+};
+
+//verify email
+export const verifyEmail = async ({ email, verificationCode }) => {
+  try {
+    const { data } = await axios.post("/api/users/verify-email", {
+      email,
+      verificationCode,
+    });
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data.message)
+      throw new Error(error.response.data.message);
+    throw new Error(error.message);
+  }
+};

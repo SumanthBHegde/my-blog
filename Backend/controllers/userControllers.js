@@ -2,46 +2,112 @@ import User from "../models/User.js";
 import Comment from "../models/Comments.js";
 import Post from "../models/Post.js";
 
-//middleware
+// Middleware imports
 import { uploadPicture } from "../middleware/uploadPictureMiddleware.js";
 import { fileRemover } from "../utils/fileRemover.js";
+import { sendVerificationEmail } from "../utils/emailService.js";
 
+// Helper function to format user response data (excludes sensitive info like password)
+const formatUserResponse = (user) => ({
+  _id: user._id,
+  avatar: user.avatar,
+  name: user.name,
+  email: user.email,
+  verified: user.verified,
+  admin: user.admin,
+  token: user.token, // Token will be added separately
+});
+
+// Controller to handle user registration
 const registerUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
-    //check whether the user exists or not
+    // Check if user already exists with the provided email
     let user = await User.findOne({ email });
 
     if (user) {
-      throw new Error("User have already registered");
+      // If user exists but is not verified, allow re-registration with new details
+      if (!user.verified) {
+        // Generate new verification code
+        const verificationCode = Math.floor(
+          100000 + Math.random() * 900000
+        ).toString();
+
+        // Update user with new details
+        user.name = name;
+        user.password = password; // This will be hashed by the pre-save hook
+        user.verificationCode = verificationCode;
+        await user.save();
+
+        // Send verification email
+        try {
+          await sendVerificationEmail(email, verificationCode);
+        } catch (emailError) {
+          console.error("Email sending failed:", emailError.message);
+          // In development, continue with registration even if email fails
+          if (process.env.NODE_ENV === "production") {
+            throw emailError;
+          }
+        }
+
+        // Return success response
+        return res.status(200).json({
+          ...formatUserResponse(user),
+          message:
+            process.env.NODE_ENV === "production"
+              ? "Account found but not verified. New verification code sent to your email."
+              : `Account updated. Check console for verification code: ${verificationCode}`,
+        });
+      }
+
+      // User exists and is verified
+      throw new Error("User has already registered");
     }
 
-    //creating new user
+    // Generate verification code
+    const verificationCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+
+    // Create a new user document in the database
     user = await User.create({
       name,
       email,
       password,
+      verificationCode,
     });
 
+    // Send verification email
+    try {
+      await sendVerificationEmail(email, verificationCode);
+    } catch (emailError) {
+      console.error("Email sending failed:", emailError.message);
+      // In development, continue with registration even if email fails
+      if (process.env.NODE_ENV === "production") {
+        throw emailError;
+      }
+    }
+
+    // Return success response with user data (without token until verified)
     return res.status(201).json({
-      _id: user._id,
-      avatar: user.avatar,
-      name: user.name,
-      email: user.email,
-      verified: user.verified,
-      admin: user.admin,
-      token: await user.generateJWT(),
+      ...formatUserResponse(user),
+      message:
+        process.env.NODE_ENV === "production"
+          ? "Registration successful. Please check your email for verification code."
+          : `Registration successful. Check console for verification code: ${verificationCode}`,
     });
   } catch (error) {
-    next(error);
+    next(error); // Pass error to error handling middleware
   }
 };
 
+// Controller to handle user login
 const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
+    // Find user by email
     let user = await User.findOne({ email });
 
     if (!user) {
@@ -49,6 +115,16 @@ const loginUser = async (req, res, next) => {
     }
 
     if (await user.comparePassword(password)) {
+      if (!user.verified) {
+        return res.status(403).json({
+          message:
+            "Please verify your email before logging in. Check your email for the verification code or request a new one.",
+          verified: false,
+          email: user.email, // Include email so frontend can offer to resend verification
+          requiresVerification: true,
+        });
+      }
+
       return res.status(201).json({
         _id: user._id,
         avatar: user.avatar,
@@ -61,6 +137,88 @@ const loginUser = async (req, res, next) => {
     } else {
       throw new Error("Invalid email or password");
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Controller to handle email verification
+const verifyEmail = async (req, res, next) => {
+  try {
+    const { email, verificationCode } = req.body;
+
+    // Find user by email
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (user.verified) {
+      throw new Error("Email already verified");
+    }
+
+    if (user.verificationCode !== verificationCode) {
+      throw new Error("Invalid verification code");
+    }
+
+    // Update user as verified
+    user.verified = true;
+    user.verificationCode = undefined; // Clear the verification code
+    await user.save();
+
+    // Generate JWT token
+    const token = await user.generateJWT();
+
+    return res.status(200).json({
+      ...formatUserResponse(user),
+      token,
+      message: "Email verified successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Controller to resend verification code
+const resendVerificationCode = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    // Find user by email
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (user.verified) {
+      throw new Error("Email already verified");
+    }
+
+    // Generate new verification code
+    const verificationCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+    user.verificationCode = verificationCode;
+    await user.save();
+
+    // Send verification email
+    try {
+      await sendVerificationEmail(email, verificationCode);
+    } catch (emailError) {
+      console.error("Email sending failed:", emailError.message);
+      if (process.env.NODE_ENV === "production") {
+        throw emailError;
+      }
+    }
+
+    return res.status(200).json({
+      message:
+        process.env.NODE_ENV === "production"
+          ? "Verification code sent successfully"
+          : `Verification code sent. Check console for code: ${verificationCode}`,
+    });
   } catch (error) {
     next(error);
   }
@@ -251,7 +409,7 @@ const deleteUser = async (req, res, next) => {
       fileRemover(post.photo);
     });
 
-    await user.remove();
+    await user.deleteOne();
     await fileRemover(user.avatar);
 
     res.status(204).json({ message: "User is deleted successfully" });
@@ -263,6 +421,8 @@ const deleteUser = async (req, res, next) => {
 export {
   registerUser,
   loginUser,
+  verifyEmail,
+  resendVerificationCode,
   userProfile,
   updateProfile,
   updateProfilePicture,

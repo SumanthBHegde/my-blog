@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
-import parseJsonToHtml from "../../utils/parseJsonToHtml";
 
 //Components
 import SuggestedPosts from "./container/SuggestedPosts";
@@ -20,7 +19,6 @@ function ArticleDetailPage() {
   const { slug } = useParams();
   const userState = useSelector((state) => state.user);
   const [breadCrumbsData, setbreadCrumbsData] = useState([]);
-  const [body, setBody] = useState(null);
 
   const { data, isLoading, isError } = useQuery({
     queryFn: () => getSinglePost({ slug }),
@@ -28,10 +26,9 @@ function ArticleDetailPage() {
     onSuccess: (data) => {
       setbreadCrumbsData([
         { name: "Home", link: "/" },
-        { name: "Blog", link: "/blog" },
+        { name: "Bhāga", link: "/blog" },
         { name: "Article title", link: `/blog/${data.slug}` },
       ]);
-      setBody(parseJsonToHtml(data?.body));
     },
   });
 

@@ -1,121 +1,171 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { images } from "../constants";
 import {
   FaSquareXTwitter,
   FaSquareInstagram,
-  FaTelegram,
+  FaLinkedin,
+  FaGithub,
   FaHeart,
+  FaEnvelope,
+  FaLocationDot,
 } from "react-icons/fa6";
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <section className="bg-dark-hard">
-      <footer className="container grid grid-cols-10 px-5 py-10 mx-auto gap-y-10 gap-x-5 md:pt-20 md:grid-cols-12 lg:grid-cols-10 lg:gap-x-10">
-        <div className="col-span-5 md:col-span-4 lg:col-span-2">
-          <h3 className="font-bold text-dark-light md:text-lg ">Product</h3>
-          <ul className="text-[#959EAD] text-sm mt-5 space-y-4 md:text-base lg:text-sm">
-            <li>
-              <a href="/">Landing Page</a>
-            </li>
-            <li>
-              <a href="/">Features</a>
-            </li>
-            <li>
-              <a href="/">Documentation</a>
-            </li>
-            <li>
-              <a href="/">Referal Programs</a>
-            </li>
-            <li>
-              <a href="/">Pricing</a>
-            </li>
-          </ul>
-        </div>
-        <div className="col-span-5 md:col-span-4 lg:col-span-2">
-          <h3 className="font-bold text-dark-light md:text-lg ">Services</h3>
-          <ul className="text-[#959EAD] text-sm mt-5 space-y-4 md:text-base lg:text-sm">
-            <li>
-              <a href="/">Documentation</a>
-            </li>
-            <li>
-              <a href="/">Design</a>
-            </li>
-            <li>
-              <a href="/">Themes</a>
-            </li>
-            <li>
-              <a href="/">Illustrations</a>
-            </li>
-            <li>
-              <a href="/">UI Kit</a>
-            </li>
-          </ul>
-        </div>
-        <div className="col-span-5 md:col-span-4 md:col-start-5 lg:col-span-2 lg:col-start-auto">
-          <h3 className="font-bold text-dark-light md:text-lg ">Company</h3>
-          <ul className="text-[#959EAD] text-sm mt-5 space-y-4 md:text-base lg:text-sm">
-            <li>
-              <a href="/">About</a>
-            </li>
-            <li>
-              <a href="/">Terms</a>
-            </li>
-            <li>
-              <a href="/">Privacy Policy</a>
-            </li>
-            <li>
-              <a href="/">Careers</a>
-            </li>
-          </ul>
-        </div>
-        <div className="col-span-5 md:col-span-4 lg:col-span-2">
-          <h3 className="font-bold text-dark-light md:text-lg ">More</h3>
-          <ul className="text-[#959EAD] text-sm mt-5 space-y-4 md:text-base lg:text-sm">
-            <li>
-              <a href="/">Documentation</a>
-            </li>
-            <li>
-              <a href="/">Licence</a>
-            </li>
-            <li>
-              <a href="/">Change Log</a>
-            </li>
-          </ul>
-        </div>
-        <div className="col-span-10 md:order-first md:col-span-4 lg:col-span-2">
-          <img src={images.logo} alt="logo" className="mx-auto md:mx-0" />
-          <p className="mt-4 text-sm text-center text-dark-light md:text-left md:text-base">
-            ನುಡಿದಂತೆ ನಡೆದಿದ್ದೇವೆ
-          </p>
-          <ul className="flex items-center justify-center mt-5 space-x-4 text-gray-300 md:justify-start">
-            <li>
-              <a href="/">
-                <FaSquareXTwitter className="w-6 h-auto" />
-              </a>
-            </li>
-            <li>
-              <a href="/">
-                <FaSquareInstagram className="w-6 h-auto" />
-              </a>
-            </li>
-            <li>
-              <a href="/">
-                <FaTelegram className="w-6 h-auto" />
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div className="flex-col items-center hidden space-y-4 md:flex md:col-span-12 lg:col-span-10">
-          <div className="p-3 text-white rounded-full bg-primary">
-            <FaHeart className="h-auto w-7" />
+    <footer className="bg-gradient-to-br from-forest-800 via-forest-700 to-earth-800 text-earth-50 relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] bg-[length:24px_24px]"></div>
+      </div>
+
+      <div className="relative z-10">
+        {/* Main Footer Content */}
+        <div className="container px-5 py-16 mx-auto">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+            {/* Brand Section */}
+            <div className="space-y-6">
+              <Link to="/" className="inline-block">
+                <img
+                  src={images.logo}
+                  alt="logo"
+                  className="h-12 w-auto object-contain brightness-110 contrast-125 drop-shadow-lg hover:scale-105 transition-all duration-300"
+                  onError={(e) => {
+                    e.target.style.display = "none";
+                  }}
+                />
+              </Link>
+              <p className="text-slate-300 leading-relaxed max-w-xs">
+                Welcome to Bhāga where I share my experiences, thoughts, and
+                insights about life, technology, and creativity. Join me on this
+                journey of discovery and let's learn together.
+              </p>
+              <div className="flex space-x-4">
+                {[
+                  {
+                    icon: FaSquareXTwitter,
+                    href: "https://x.com/Hebhsum?t=TN0xr21VuxgXsKCFCQDnvw&s=09",
+                    label: "X (Twitter)",
+                  },
+                  {
+                    icon: FaSquareInstagram,
+                    href: "https://www.instagram.com/sumanth_hutgar?utm_source=qr&igsh=MWJpODM1dmxjaWp6bw==",
+                    label: "Instagram",
+                  },
+                  {
+                    icon: FaLinkedin,
+                    href: "https://www.linkedin.com/in/sumanth-hegde-37805a2b9?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+                    label: "LinkedIn",
+                  },
+                  {
+                    icon: FaGithub,
+                    href: "https://github.com/SumanthBHegde",
+                    label: "GitHub",
+                  },
+                ].map(({ icon: Icon, href, label }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 bg-forest-700/50 hover:bg-forest-600 rounded-xl transition-all duration-300 hover:scale-110 group"
+                    aria-label={label}
+                  >
+                    <Icon className="w-5 h-5 text-forest-400 group-hover:text-earth-50 transition-colors duration-300" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Quick Links */}
+            <div className="space-y-6">
+              <h3 className="text-xl font-bold text-white">Quick Links</h3>
+              <ul className="space-y-3">
+                {[
+                  { name: "Home", href: "/" },
+                  { name: "Bhāga", href: "/blog" },
+                  { name: "About Us", href: "/about" },
+                  { name: "Contact", href: "/contact" },
+                ].map(({ name, href }) => (
+                  <li key={name}>
+                    <Link
+                      to={href}
+                      className="text-slate-300 hover:text-forest-400 transition-colors duration-300 hover:translate-x-1 inline-block"
+                    >
+                      {name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Categories */}
+            <div className="space-y-6">
+              <h3 className="text-xl font-bold text-white">Categories</h3>
+              <ul className="space-y-3">
+                {[
+                  { name: "Technology", href: "/blog?category=technology" },
+                  { name: "Travel", href: "/blog?category=travel" },
+                  { name: "Lifestyle", href: "/blog?category=lifestyle" },
+                  { name: "Food", href: "/blog?category=food" },
+                  { name: "Business", href: "/blog?category=business" },
+                ].map(({ name, href }) => (
+                  <li key={name}>
+                    <Link
+                      to={href}
+                      className="text-slate-300 hover:text-forest-400 transition-colors duration-300 hover:translate-x-1 inline-block"
+                    >
+                      {name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Contact Info */}
+            <div className="space-y-6">
+              <h3 className="text-xl font-bold text-white">Get in Touch</h3>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 bg-slate-800/50 rounded-lg">
+                    <FaEnvelope className="w-4 h-4 text-forest-400" />
+                  </div>
+                  <a
+                    href="mailto:sumanthhegde002@gmail.com"
+                    className="text-slate-300 hover:text-forest-400 transition-colors duration-300"
+                  >
+                    sumanthhegde002@gmail.com
+                  </a>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 bg-slate-800/50 rounded-lg">
+                    <FaLocationDot className="w-4 h-4 text-forest-400" />
+                  </div>
+                  <span className="text-slate-300">Sirsi, Karnataka</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <p className="italic font-bold text-dark-light">
-            {" "}
-            Copyright © 2024. Crafted with Masti.
-          </p>
         </div>
-      </footer>
-    </section>
+
+        {/* Bottom Section */}
+        <div className="border-t border-slate-700/50">
+          <div className="container px-5 py-8 mx-auto">
+            <div className="flex flex-col items-center justify-center space-y-4 md:flex-row md:space-y-0">
+              <div className="flex items-center space-x-2 text-slate-400">
+                <span>© {currentYear} Bhāga. Made with</span>
+                <div className="flex items-center space-x-1">
+                  <FaHeart className="w-4 h-4 text-red-500 animate-pulse" />
+                  <span>by Sumanth Hegde</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
   );
 };
 

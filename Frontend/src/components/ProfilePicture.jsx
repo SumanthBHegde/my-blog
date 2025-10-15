@@ -17,7 +17,7 @@ const ProfilePicture = ({ avatar }) => {
   const [openCrop, setOpenCrop] = useState(false);
   const [photo, setPhoto] = useState(null);
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: ({ token, formData }) => {
       return updateProfilePicture({
         token: token,
@@ -33,7 +33,6 @@ const ProfilePicture = ({ avatar }) => {
     },
     onError: (error) => {
       toast.error(error.message);
-      console.log(error);
     },
   });
 
@@ -52,7 +51,6 @@ const ProfilePicture = ({ avatar }) => {
         mutate({ token: userState.userInfo.token, formData: formData });
       } catch (error) {
         toast.error(error.message);
-        console.log(error);
       }
     }
   };

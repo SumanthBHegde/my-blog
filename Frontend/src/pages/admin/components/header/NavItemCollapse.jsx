@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
 
 const NavItemCollapse = ({
   title,
@@ -9,38 +8,35 @@ const NavItemCollapse = ({
   activeNavName,
   setActiveNavName,
 }) => {
-  const [isChecked, setIsChecked] = useState(false);
-
-  useEffect(() => {
-    if (activeNavName !== name) {
-      setIsChecked(false);
-    }
-  }, [activeNavName, name]);
+  const isActive = name === activeNavName;
 
   return (
-    <div className="min-h-0 py-2 rounded-none d-collapse d-collapse-arrow bg-base-200">
-      <input
-        type="checkbox"
-        className="min-h-0 py-0"
-        checked={name === activeNavName}
-        onChange={() => {
-          setActiveNavName(name);
-          setIsChecked(!isChecked);
-        }}
-      />
+    <div className="min-h-0 rounded-xl overflow-hidden">
       <div
-        className={`d-collapse-title font-medium min-h-0 py-0 pl-0 flex items-center gap-x-2 text-lg ${
-          name === activeNavName
-            ? "font-bold text-primary"
-            : "font-semibold text-[#A5A5A5]"
+        className={`flex items-center gap-x-3 py-3 px-4 text-base font-semibold cursor-pointer transition-all duration-300 rounded-xl ${
+          isActive
+            ? "bg-gradient-to-r from-forest-600 to-forest-700 text-white shadow-lg shadow-forest-600/30"
+            : "text-forest-700 hover:bg-forest-50"
         }`}
+        onClick={() => setActiveNavName(name)}
       >
-        {icon}
+        <span className={isActive ? "text-white" : "text-forest-600"}>
+          {icon}
+        </span>
         {title}
+        <span
+          className={`ml-auto transition-transform duration-300 ${
+            isActive ? "rotate-180" : ""
+          }`}
+        >
+          {isActive ? "▲" : "▼"}
+        </span>
       </div>
-      <div className="d-collapse-content">
-        <div className="flex flex-col mt-2 gap-y-2">{children}</div>
-      </div>
+      {isActive && (
+        <div className="flex flex-col mt-2 gap-y-1 animate-fade-in">
+          {children}
+        </div>
+      )}
     </div>
   );
 };

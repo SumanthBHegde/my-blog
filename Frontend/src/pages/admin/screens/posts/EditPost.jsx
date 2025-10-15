@@ -72,7 +72,6 @@ const EditPost = () => {
     },
     onError: (error) => {
       toast.error(error.message);
-      console.log(error);
     },
   });
 
@@ -129,158 +128,209 @@ const EditPost = () => {
   let isPostDataLoaded = !isLoading && !isError;
 
   return (
-    <div>
+    <div className="max-w-6xl mx-auto">
       {isLoading ? (
         <ArticleDetailSkeleton />
       ) : isError ? (
         <ErrorMessage message="Couldn't fetch the post detail" />
       ) : (
-        <section className="container flex flex-col max-w-5xl px-5 py-5 mx-auto lg:flex-row lg:gap-x-5 lg:items-start">
-          <article className="flex-1">
-            {/* Photo upload */}
-            <label htmlFor="postPicture" className="w-full cursor-pointer">
-              {photo ? (
-                <img
-                  src={URL.createObjectURL(photo)}
-                  alt={data?.title}
-                  className="w-full rounded-xl"
-                />
-              ) : initialPhoto ? (
-                <img
-                  src={stables.UPLOAD_FOLDER_BASE_URL + data?.photo}
-                  alt={data?.title}
-                  className="w-full rounded-xl"
-                />
-              ) : (
-                <div className="w-full min-h-[200px] bg-blue-50/50 flex justify-center items-center">
-                  <HiOutlineCamera className="h-auto w-7 text-primary" />
-                </div>
-              )}
-            </label>
-            <input
-              type="file"
-              className="sr-only"
-              id="postPicture"
-              onChange={handleFileChange}
-            />
-            {/* Button to delete image */}
-            <button
-              type="button"
-              onClick={handleDeleteImage}
-              className="px-2 py-1 mt-5 text-sm font-semibold text-white bg-red-500 rounded-lg w-fit"
+        <div className="space-y-6">
+          {/* Page Header */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-forest-800 mb-2">
+                Edit Post
+              </h1>
+              <div className="w-20 h-1 bg-gradient-to-r from-forest-600 to-forest-400 rounded-full"></div>
+            </div>
+            <Link
+              to="/admin/posts/manage"
+              className="px-4 py-2 text-sm font-semibold text-forest-700 bg-white border-2 border-forest-200 rounded-xl hover:bg-forest-50 transition-all duration-200"
             >
-              Delete Image
-            </button>
-            {/* Display categories */}
-            <div className="flex gap-2 mt-4">
-              {data?.categories.map((category) => (
-                <Link
-                  key={category._id}
-                  to={`/blog?category=${category.name}`}
-                  className="inline-block text-sm text-primary font-roboto md:text-base"
+              ← Back to Posts
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Main Content */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Title Input Card */}
+              <div className="bg-white rounded-2xl shadow-lg border border-forest-100 p-6">
+                <label
+                  className="block mb-3 text-sm font-bold text-forest-800 uppercase tracking-wide"
+                  htmlFor="title"
                 >
-                  {category.name}
-                </Link>
-              ))}
-            </div>
-            {/* Title input */}
-            <div className="w-full d-form-control">
-              <label className="d-label" htmlFor="title">
-                <span className="d-label-text">Title</span>
-              </label>
-              <input
-                id="title"
-                value={title}
-                className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-xl font-medium font-roboto text-dark-hard"
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="title"
-              />
-            </div>
-            {/* Caption input */}
-            <div className="w-full d-form-control">
-              <label className="d-label" htmlFor="caption">
-                <span className="d-label-text">Caption</span>
-              </label>
-              <input
-                id="caption"
-                value={caption}
-                className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-xl font-medium font-roboto text-dark-hard"
-                onChange={(e) => setCaption(e.target.value)}
-                placeholder="caption"
-              />
-            </div>
-            {/* Slug input */}
-            <div className="w-full d-form-control">
-              <label className="d-label" htmlFor="slug">
-                <span className="d-label-text">Slug</span>
-              </label>
-              <input
-                id="slug"
-                value={postSlug}
-                className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-xl font-medium font-roboto text-dark-hard"
-                onChange={(e) =>
-                  setPostSlug(e.target.value.replace(/\s+/g, "-").toLowerCase())
-                }
-                placeholder="post slug"
-              />
-            </div>
-            {/* Multi-select dropdown for categories */}
-            <div className="mt-2 mb-5">
-              <label className="d-label">
-                <span className="d-label-text">Categories</span>
-              </label>
-              {isPostDataLoaded && (
-                <MultiSelectTagDropdown
-                  loadOptions={promiseOptions}
-                  defaultValue={data.categories.map(categoryToOption)}
-                  onChange={(newValue) =>
-                    setCategories(newValue.map((item) => item.value))
+                  Post Title
+                </label>
+                <input
+                  id="title"
+                  value={title}
+                  className="w-full px-4 py-3 text-xl font-medium transition-all duration-300 border-2 bg-white border-forest-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-forest-100 focus:border-forest-500 placeholder:text-forest-400 text-forest-800"
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Enter post title..."
+                />
+              </div>
+
+              {/* Caption Input Card */}
+              <div className="bg-white rounded-2xl shadow-lg border border-forest-100 p-6">
+                <label
+                  className="block mb-3 text-sm font-bold text-forest-800 uppercase tracking-wide"
+                  htmlFor="caption"
+                >
+                  Caption
+                </label>
+                <input
+                  id="caption"
+                  value={caption}
+                  className="w-full px-4 py-3 transition-all duration-300 border-2 bg-white border-forest-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-forest-100 focus:border-forest-500 placeholder:text-forest-400 text-forest-800"
+                  onChange={(e) => setCaption(e.target.value)}
+                  placeholder="Enter a brief caption..."
+                />
+              </div>
+
+              {/* Slug Input Card */}
+              <div className="bg-white rounded-2xl shadow-lg border border-forest-100 p-6">
+                <label
+                  className="block mb-3 text-sm font-bold text-forest-800 uppercase tracking-wide"
+                  htmlFor="slug"
+                >
+                  URL Slug
+                </label>
+                <input
+                  id="slug"
+                  value={postSlug}
+                  className="w-full px-4 py-3 font-mono transition-all duration-300 border-2 bg-white border-forest-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-forest-100 focus:border-forest-500 placeholder:text-forest-400 text-forest-800"
+                  onChange={(e) =>
+                    setPostSlug(
+                      e.target.value.replace(/\s+/g, "-").toLowerCase()
+                    )
                   }
+                  placeholder="post-url-slug"
                 />
-              )}
+              </div>
+
+              {/* Editor Card */}
+              <div className="bg-white rounded-2xl shadow-lg border border-forest-100 p-6">
+                <label className="block mb-4 text-sm font-bold text-forest-800 uppercase tracking-wide">
+                  Post Content
+                </label>
+                {isPostDataLoaded && (
+                  <Editor
+                    content={data?.body}
+                    editable={true}
+                    onDataChange={(data) => {
+                      setBody(data);
+                    }}
+                  />
+                )}
+              </div>
             </div>
-            {/* CreatableSelect component for tags */}
-            <div className="mt-2 mb-5">
-              <label className="d-label">
-                <span className="d-label-text">Tags</span>
-              </label>
-              {isPostDataLoaded && (
-                <CreatableSelect
-                  defaultValue={data.tags.map((tag) => ({
-                    value: tag,
-                    label: tag,
-                  }))}
-                  isMulti
-                  onChange={(newValue) =>
-                    setTags(newValue.map((item) => item.value))
-                  }
-                  className="relative z-20"
+
+            {/* Sidebar */}
+            <div className="space-y-6">
+              {/* Featured Image Card */}
+              <div className="bg-white rounded-2xl shadow-lg border border-forest-100 p-6">
+                <label className="block mb-4 text-sm font-bold text-forest-800 uppercase tracking-wide">
+                  Featured Image
+                </label>
+                <label
+                  htmlFor="postPicture"
+                  className="block cursor-pointer group"
+                >
+                  <div className="relative overflow-hidden rounded-xl border-2 border-dashed border-forest-300 hover:border-forest-500 transition-all duration-300">
+                    {photo ? (
+                      <img
+                        src={URL.createObjectURL(photo)}
+                        alt={data?.title}
+                        className="w-full h-48 object-cover"
+                      />
+                    ) : initialPhoto ? (
+                      <img
+                        src={stables.UPLOAD_FOLDER_BASE_URL + data?.photo}
+                        alt={data?.title}
+                        className="w-full h-48 object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-48 bg-gradient-to-br from-forest-50 to-earth-50 flex flex-col justify-center items-center gap-2">
+                        <HiOutlineCamera className="h-12 w-12 text-forest-400 group-hover:text-forest-600 transition-colors" />
+                        <span className="text-sm font-medium text-forest-600">
+                          Click to upload
+                        </span>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
+                  </div>
+                </label>
+                <input
+                  type="file"
+                  className="sr-only"
+                  id="postPicture"
+                  onChange={handleFileChange}
                 />
-              )}
+                {(photo || initialPhoto) && (
+                  <button
+                    type="button"
+                    onClick={handleDeleteImage}
+                    className="w-full mt-4 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                  >
+                    Delete Image
+                  </button>
+                )}
+              </div>
+
+              {/* Categories Card */}
+              <div className="bg-white rounded-2xl shadow-lg border border-forest-100 p-6">
+                <label className="block mb-4 text-sm font-bold text-forest-800 uppercase tracking-wide">
+                  Categories
+                </label>
+                {isPostDataLoaded && (
+                  <MultiSelectTagDropdown
+                    loadOptions={promiseOptions}
+                    defaultValue={data.categories.map(categoryToOption)}
+                    onChange={(newValue) =>
+                      setCategories(newValue.map((item) => item.value))
+                    }
+                  />
+                )}
+              </div>
+
+              {/* Tags Card */}
+              <div className="bg-white rounded-2xl shadow-lg border border-forest-100 p-6">
+                <label className="block mb-4 text-sm font-bold text-forest-800 uppercase tracking-wide">
+                  Tags
+                </label>
+                <p className="text-xs text-forest-600 mb-3">
+                  Type and press Enter to add tags
+                </p>
+                {isPostDataLoaded && (
+                  <CreatableSelect
+                    defaultValue={data.tags.map((tag) => ({
+                      value: tag,
+                      label: tag,
+                    }))}
+                    isMulti
+                    onChange={(newValue) =>
+                      setTags(newValue.map((item) => item.value))
+                    }
+                    className="relative z-20"
+                    placeholder="Add tags..."
+                    formatCreateLabel={(inputValue) => `Create "${inputValue}"`}
+                  />
+                )}
+              </div>
+
+              {/* Update Button */}
+              <button
+                disabled={isLoadingUpdatePostDetail}
+                type="button"
+                onClick={handleUpdatePost}
+                className="w-full px-6 py-3 font-bold text-white bg-gradient-to-r from-forest-600 to-forest-700 rounded-xl hover:from-forest-700 hover:to-forest-800 disabled:cursor-not-allowed disabled:opacity-70 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:transform-none"
+              >
+                {isLoadingUpdatePostDetail ? "Updating..." : "Update Post"}
+              </button>
             </div>
-            {/* Editor for post content */}
-            <div className="w-full">
-              {isPostDataLoaded && (
-                <Editor
-                  content={data?.body}
-                  editable={true}
-                  onDataChange={(data) => {
-                    setBody(data);
-                  }}
-                />
-              )}
-            </div>
-            {/* Button to update post */}
-            <button
-              disabled={isLoadingUpdatePostDetail}
-              type="button"
-              onClick={handleUpdatePost}
-              className="w-full px-4 py-2 font-semibold text-white bg-green-500 rounded-lg disabled:cursor-not-allowed disabled:opacity-70"
-            >
-              Update Post
-            </button>
-          </article>
-        </section>
+          </div>
+        </div>
       )}
     </div>
   );

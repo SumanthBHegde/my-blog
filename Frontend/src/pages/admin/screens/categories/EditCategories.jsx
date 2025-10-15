@@ -42,7 +42,6 @@ const EditCategories = () => {
       },
       onError: (error) => {
         toast.error(error.message);
-        console.log(error);
       },
     });
 
@@ -57,11 +56,11 @@ const EditCategories = () => {
 
   return (
     <div className="col-span-4 py-8">
-      <h4 className="text-lg leading-tight">Update Category</h4>
-      <div className="w-full mt-6 d-form-control">
+      <h4 className="text-lg leading-tight text-forest-800">Update Category</h4>
+      <div className="w-full mt-6">
         <input
           value={categoryTitle}
-          className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-xl font-medium font-roboto text-dark-hard"
+          className="w-full px-4 py-3 bg-earth-50 border border-forest-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-forest-100 focus:border-forest-400 transition-all duration-300 placeholder:text-forest-400 text-xl font-medium font-roboto text-forest-800"
           onChange={(e) => setCategoryTitle(e.target.value)}
           placeholder="category title"
         />

@@ -14,12 +14,16 @@ const NavItem = ({
       to={link}
       className={`${
         name === activeNavName
-          ? "font-bold text-primary"
-          : "font-semibold text-[#A5A5A5]"
-      } flex items-center gap-x-2 py-2 text-lg`}
+          ? "bg-gradient-to-r from-forest-600 to-forest-700 text-white shadow-lg shadow-forest-600/30"
+          : "text-forest-700 hover:bg-forest-50"
+      } flex items-center gap-x-3 py-3 px-4 text-base font-semibold rounded-xl transition-all duration-300 transform hover:translate-x-1`}
       onClick={() => setActiveNavName(name)}
     >
-      {icon}
+      <span
+        className={name === activeNavName ? "text-white" : "text-forest-600"}
+      >
+        {icon}
+      </span>
       {title}
     </NavLink>
   );
