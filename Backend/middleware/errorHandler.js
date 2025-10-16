@@ -18,7 +18,19 @@ export const errorResponseHandler = (err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
 
-  // Log the error
+  // Log the error with more details
+  console.error("Error Handler - Full Error:", {
+    message: err.message,
+    stack: err.stack,
+    url: req.url,
+    method: req.method,
+    body: req.body,
+    params: req.params,
+    query: req.query,
+    statusCode: statusCode,
+  });
+
+  // Log the error with winston
   logger.error({
     message: err.message,
     stack: err.stack,
@@ -40,4 +52,3 @@ export const invalidPathHandler = (req, res, next) => {
   error.statusCode = 404;
   next(error);
 };
-

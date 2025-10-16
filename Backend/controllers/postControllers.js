@@ -7,6 +7,21 @@ import { v4 as uuidv4 } from "uuid";
 // Controller function to create a new post
 const createPost = async (req, res, next) => {
   try {
+    console.log("Creating new post for user:", req.user._id);
+
+    // Verify Cloudinary configuration
+    if (
+      !process.env.CLOUDINARY_CLOUD_NAME ||
+      !process.env.CLOUDINARY_API_KEY ||
+      !process.env.CLOUDINARY_API_SECRET
+    ) {
+      console.error("Cloudinary configuration missing:", {
+        cloudName: !!process.env.CLOUDINARY_CLOUD_NAME,
+        apiKey: !!process.env.CLOUDINARY_API_KEY,
+        apiSecret: !!process.env.CLOUDINARY_API_SECRET,
+      });
+    }
+
     // Create a new post object with default values
     const post = new Post({
       title: "sample title",
@@ -22,8 +37,10 @@ const createPost = async (req, res, next) => {
 
     // Save the new post to the database
     const createdPost = await post.save();
+    console.log("Post created successfully:", createdPost._id);
     return res.json(createdPost);
   } catch (error) {
+    console.error("Error in createPost:", error.message, error.stack);
     next(error);
   }
 };

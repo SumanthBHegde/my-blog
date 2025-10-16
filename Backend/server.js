@@ -37,6 +37,28 @@ app.get("/", (req, res) => {
   res.send("Server is running...");
 });
 
+// Health check endpoint with Cloudinary configuration check
+app.get("/api/health", (req, res) => {
+  const cloudinaryConfigured = !!(
+    process.env.CLOUDINARY_CLOUD_NAME &&
+    process.env.CLOUDINARY_API_KEY &&
+    process.env.CLOUDINARY_API_SECRET
+  );
+
+  res.json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || "development",
+    cloudinary: {
+      configured: cloudinaryConfigured,
+      cloudName: process.env.CLOUDINARY_CLOUD_NAME ? "Set" : "Not set",
+      apiKey: process.env.CLOUDINARY_API_KEY ? "Set" : "Not set",
+      apiSecret: process.env.CLOUDINARY_API_SECRET ? "Set" : "Not set",
+    },
+    database: "Connected", // You can enhance this with actual DB check
+  });
+});
+
 app.use("/api/users", UserRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
