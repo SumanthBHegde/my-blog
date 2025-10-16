@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import { getAllPosts } from "../../services/index/posts";
 import ArticleCardSkeleton from "../../components/ArticleCardSkeleton";
 import ErrorMessage from "../../components/Errormessage";
+import LoadingError from "../../components/LoadingError";
 import ArticleCard from "../../components/Articlecard";
 import MainLayout from "../../components/MainLayout";
 import Pagination from "../../components/Pagination";
@@ -69,9 +70,37 @@ const BlogPage = () => {
               />
             ))
           ) : isError ? (
-            <ErrorMessage message="Couldn't fetch the posts data" />
+            <div className="w-full">
+              <LoadingError
+                title="Unable to Load Posts"
+                message="We're having trouble connecting to our server. It might be waking up from sleep mode (this takes 30-60 seconds on first load)."
+                onRetry={refetch}
+              />
+            </div>
           ) : data?.data.length === 0 ? (
-            <p className="text-orange-500">No Posts Found!</p>
+            <div className="w-full text-center py-12">
+              <div className="max-w-md mx-auto">
+                <svg
+                  className="w-24 h-24 mx-auto text-forest-300 mb-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <h3 className="text-2xl font-bold text-forest-800 mb-2">
+                  No Posts Found
+                </h3>
+                <p className="text-forest-600">
+                  Try adjusting your search or check back later for new content!
+                </p>
+              </div>
+            </div>
           ) : (
             data?.data.map((post) => (
               <ArticleCard
@@ -82,7 +111,7 @@ const BlogPage = () => {
             ))
           )}
         </div>
-        {!isLoading && (
+        {!isLoading && !isError && data?.data.length > 0 && (
           <Pagination
             onPageChange={(page) => handlePageChange(page)}
             currentPage={currentPage}

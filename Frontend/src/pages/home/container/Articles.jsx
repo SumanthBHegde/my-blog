@@ -6,11 +6,11 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getAllPosts } from "../../../services/index/posts";
 import ArticleCardSkeleton from "../../../components/ArticleCardSkeleton";
-import ErrorMessage from "../../../components/Errormessage";
+import LoadingError from "../../../components/LoadingError";
 import ArticleCard from "../../../components/Articlecard";
 
 const Articles = () => {
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryFn: () => getAllPosts("", 1, 6),
     queryKey: ["posts"],
     onError: (error) => {
@@ -29,7 +29,13 @@ const Articles = () => {
             />
           ))
         ) : isError ? (
-          <ErrorMessage message="Couldn't fetch the posts data" />
+          <div className="w-full">
+            <LoadingError
+              title="Unable to Load Latest Posts"
+              message="We're having trouble connecting to our server. It might be waking up from sleep mode (this takes 30-60 seconds on first load)."
+              onRetry={refetch}
+            />
+          </div>
         ) : (
           data?.data.map((post) => (
             <ArticleCard
@@ -40,13 +46,15 @@ const Articles = () => {
           ))
         )}
       </div>
-      <Link
-        to="/blog"
-        className="group flex items-center px-6 py-3 mx-auto font-bold border-2 rounded-lg gap-x-2 text-forest-700 border-forest-300 hover:bg-forest-600 hover:text-white hover:border-forest-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
-      >
-        <span>More articles</span>
-        <FaArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
-      </Link>
+      {!isError && (
+        <Link
+          to="/blog"
+          className="group flex items-center px-6 py-3 mx-auto font-bold border-2 rounded-lg gap-x-2 text-forest-700 border-forest-300 hover:bg-forest-600 hover:text-white hover:border-forest-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+        >
+          <span>More articles</span>
+          <FaArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
+        </Link>
+      )}
     </section>
   );
 };

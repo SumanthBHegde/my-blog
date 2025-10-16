@@ -24,12 +24,12 @@ app.use(express.json());
 // CORS configuration for production
 const corsOptions = {
   origin: [
-    'http://localhost:3000',
-    'http://localhost:5000',
-    'https://sumanthbhegde.github.io'
+    "http://localhost:3000",
+    "http://localhost:5000",
+    "https://sumanthbhegde.github.io",
   ],
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
 
