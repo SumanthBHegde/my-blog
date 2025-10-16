@@ -3,8 +3,6 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
-let isFirstRun = true;
-
 export const useDataTable = ({
   dataQueryFn,
   dataQueryKey,
@@ -18,11 +16,13 @@ export const useDataTable = ({
 
   const { data, isLoading, isFetching, refetch, isError, error } = useQuery({
     queryFn: dataQueryFn,
-    queryKey: [dataQueryKey],
+    queryKey: [dataQueryKey, currentPage, searchKeyword],
     onError: (err) => {
       toast.error(err.message);
       console.error("Data fetch error:", err);
     },
+    retry: 2,
+    retryDelay: 1000,
   });
 
   const { mutate: mutateDeletePost, isLoading: isLoadingDeleteData } =
@@ -37,14 +37,6 @@ export const useDataTable = ({
       },
     });
 
-  useEffect(() => {
-    if (isFirstRun) {
-      isFirstRun = false;
-      return;
-    }
-    refetch();
-  }, [refetch, currentPage]);
-
   const searchKeywordHandler = (e) => {
     const { value } = e.target;
     setSearchKeyword(value);
@@ -53,7 +45,6 @@ export const useDataTable = ({
   const submitSearchKeywordHandler = (e) => {
     e.preventDefault();
     setCurrentPage(1);
-    refetch();
   };
 
   const deleteDataHandler = ({ slug, token }) => {

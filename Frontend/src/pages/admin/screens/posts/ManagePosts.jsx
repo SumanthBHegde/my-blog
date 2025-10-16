@@ -18,6 +18,8 @@ const ManagePosts = () => {
     submitSearchKeywordHandler,
     deleteDataHandler,
     setCurrentPage,
+    isError,
+    error,
   } = useDataTable({
     dataQueryFn: () => getAllPosts(searchKeyword, currentPage),
     dataQueryKey: "posts",
@@ -46,6 +48,8 @@ const ManagePosts = () => {
       currentPage={currentPage}
       headers={postsData?.headers}
       userState={userState}
+      isError={isError}
+      error={error}
     >
       {postsData?.data.map((post) => (
         <tr key={post._id}>

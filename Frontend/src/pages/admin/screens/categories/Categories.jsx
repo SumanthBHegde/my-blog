@@ -43,6 +43,8 @@ const Categories = () => {
     submitSearchKeywordHandler,
     deleteDataHandler,
     setCurrentPage,
+    isError,
+    error,
   } = useDataTable({
     dataQueryFn: () => getAllCategories(searchKeyword, currentPage),
     dataQueryKey: "categories",
@@ -101,6 +103,8 @@ const Categories = () => {
           currentPage={currentPage}
           headers={categoriesData?.headers}
           userState={userState}
+          isError={isError}
+          error={error}
         >
           {categoriesData?.data.map((category) => (
             <tr key={category._id}>

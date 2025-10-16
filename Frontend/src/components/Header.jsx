@@ -191,16 +191,16 @@ const Header = () => {
               navIsVisible
                 ? "translate-x-0 opacity-100"
                 : "translate-x-full opacity-0"
-            } fixed inset-0 z-40 lg:hidden transition-all duration-300`}
+            } fixed inset-0 z-[9999] lg:hidden transition-all duration-300`}
           >
             <div
               className="absolute inset-0 bg-black/50 backdrop-blur-sm"
               onClick={navVisibilityHandler}
             ></div>
-            <div className="absolute top-0 right-0 h-full bg-white shadow-2xl w-80">
+            <div className="absolute top-0 right-0 h-full overflow-y-auto bg-white shadow-2xl w-80">
               <div className="p-6">
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-xl font-bold text-slate-800">Menu</h2>
+                <div className="flex items-center justify-between mb-8 pb-4 border-b border-forest-100">
+                  <h2 className="text-2xl font-bold text-forest-800">Menu</h2>
                   <button
                     onClick={navVisibilityHandler}
                     className="p-2 transition-all duration-200 transform rounded-lg hover:bg-forest-50 hover:shadow-md hover:scale-105"
@@ -209,45 +209,75 @@ const Header = () => {
                   </button>
                 </div>
 
-                <ul className="mb-8 space-y-4">
+                <ul className="mb-8 space-y-2">
                   {navItemsInfo.map((item) => (
-                    <NavItem key={item.name} item={item} />
+                    <li key={item.name} className="w-full">
+                      <Link
+                        to={item.href}
+                        onClick={navVisibilityHandler}
+                        className="block w-full px-4 py-3 text-base font-medium transition-all duration-200 transform rounded-lg text-forest-700 hover:bg-forest-50 hover:text-forest-600 hover:translate-x-1"
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
                   ))}
                 </ul>
 
                 {userState.userInfo ? (
-                  <div className="space-y-4">
+                  <div className="pt-4 space-y-2 border-t border-forest-100">
+                    <div className="px-4 py-2 mb-3">
+                      <p className="text-xs font-semibold text-forest-500 uppercase tracking-wide">
+                        Welcome to Bhāga
+                      </p>
+                      <p className="text-sm font-medium text-forest-800 mt-1">
+                        {userState.userInfo.name}
+                      </p>
+                    </div>
                     {userState?.userInfo?.admin && (
                       <button
-                        onClick={() => navigate("/admin")}
+                        onClick={() => {
+                          navigate("/admin");
+                          navVisibilityHandler();
+                        }}
                         type="button"
-                        className="w-full px-4 py-3 text-left transition-all duration-200 transform rounded-lg text-slate-700 hover:bg-forest-50 hover:text-forest-700 hover:translate-x-1"
+                        className="w-full px-4 py-3 text-base font-medium text-left transition-all duration-200 transform rounded-lg text-forest-700 hover:bg-forest-50 hover:text-forest-700 hover:translate-x-1"
                       >
                         Admin Dashboard
                       </button>
                     )}
                     <button
-                      onClick={() => navigate("/profile")}
+                      onClick={() => {
+                        navigate("/profile");
+                        navVisibilityHandler();
+                      }}
                       type="button"
-                      className="w-full px-4 py-3 text-left transition-all duration-200 transform rounded-lg text-slate-700 hover:bg-forest-50 hover:text-forest-700 hover:translate-x-1"
+                      className="w-full px-4 py-3 text-base font-medium text-left transition-all duration-200 transform rounded-lg text-forest-700 hover:bg-forest-50 hover:text-forest-700 hover:translate-x-1"
                     >
                       Profile
                     </button>
                     <button
-                      onClick={logoutHandler}
+                      onClick={() => {
+                        logoutHandler();
+                        navVisibilityHandler();
+                      }}
                       type="button"
-                      className="w-full px-4 py-3 text-left text-red-600 transition-all duration-200 transform rounded-lg hover:bg-red-50 hover:text-red-700 hover:translate-x-1"
+                      className="w-full px-4 py-3 text-base font-medium text-left text-red-600 transition-all duration-200 transform rounded-lg hover:bg-red-50 hover:text-red-700 hover:translate-x-1"
                     >
                       Logout
                     </button>
                   </div>
                 ) : (
-                  <button
-                    onClick={() => navigate("/login")}
-                    className="w-full px-6 py-3 font-semibold text-white transition-all duration-300 rounded-lg shadow-lg bg-gradient-to-r from-forest-600 to-forest-700 hover:from-forest-700 hover:to-forest-800"
-                  >
-                    Sign in
-                  </button>
+                  <div className="pt-4 border-t border-forest-100">
+                    <button
+                      onClick={() => {
+                        navigate("/login");
+                        navVisibilityHandler();
+                      }}
+                      className="w-full px-6 py-3 text-base font-semibold text-white transition-all duration-300 rounded-lg shadow-lg bg-gradient-to-r from-forest-600 to-forest-700 hover:from-forest-700 hover:to-forest-800"
+                    >
+                      Sign in
+                    </button>
+                  </div>
                 )}
               </div>
             </div>

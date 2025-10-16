@@ -138,15 +138,18 @@ const DataTable = ({
           </div>
 
           {/* Pagination */}
-          {!isLoading && data?.length > 0 && (
-            <div className="px-6 py-4 bg-gradient-to-r from-white to-forest-50 border-t border-forest-100">
-              <Pagination
-                onPageChange={(page) => setCurrentPage(page)}
-                currentPage={currentPage}
-                totalPageCount={JSON.parse(headers?.["x-totalpagecount"])}
-              />
-            </div>
-          )}
+          {!isLoading &&
+            !isFetching &&
+            data?.length > 0 &&
+            headers?.["x-totalpagecount"] && (
+              <div className="px-6 py-4 bg-gradient-to-r from-white to-forest-50 border-t border-forest-100">
+                <Pagination
+                  onPageChange={(page) => setCurrentPage(page)}
+                  currentPage={currentPage}
+                  totalPageCount={JSON.parse(headers["x-totalpagecount"])}
+                />
+              </div>
+            )}
         </div>
       </div>
     </div>

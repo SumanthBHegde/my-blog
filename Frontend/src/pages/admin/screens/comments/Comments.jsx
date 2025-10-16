@@ -26,6 +26,8 @@ const Comments = () => {
     submitSearchKeywordHandler,
     deleteDataHandler,
     setCurrentPage,
+    isError,
+    error,
   } = useDataTable({
     dataQueryFn: () =>
       getAllComments(userState.userInfo.token, searchKeyword, currentPage),
@@ -75,6 +77,8 @@ const Comments = () => {
       setCurrentPage={setCurrentPage}
       currentPage={currentPage}
       headers={commentsData?.headers}
+      isError={isError}
+      error={error}
     >
       {commentsData?.data.map((comment) => (
         <tr key={comment._id}>

@@ -25,7 +25,7 @@ const BlogPage = () => {
     { name: "Blog", link: "/blog" },
   ];
 
-  const { data, isLoading, isError, isFetching, refetch, error } = useQuery({
+  const { data, isLoading, isError, isFetching, refetch } = useQuery({
     queryFn: () => getAllPosts(searchKeyword, currentPage, 12),
     queryKey: ["posts", currentPage, searchKeyword],
     onError: (error) => {

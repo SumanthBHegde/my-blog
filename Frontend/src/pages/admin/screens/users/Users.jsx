@@ -25,6 +25,8 @@ const Users = () => {
     submitSearchKeywordHandler,
     deleteDataHandler,
     setCurrentPage,
+    isError,
+    error,
   } = useDataTable({
     dataQueryFn: () =>
       getAllUsers(userState.userInfo.token, searchKeyword, currentPage),
@@ -91,6 +93,8 @@ const Users = () => {
       currentPage={currentPage}
       headers={usersData?.headers}
       userState={userState}
+      isError={isError}
+      error={error}
     >
       {usersData?.data.map((user) => (
         <tr key={user._id}>
