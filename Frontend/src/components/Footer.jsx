@@ -15,7 +15,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-br from-forest-800 via-forest-700 to-earth-800 text-earth-50 relative overflow-hidden">
+    <footer className="relative overflow-hidden bg-gradient-to-br from-forest-800 via-forest-700 to-earth-800 text-earth-50">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] bg-[length:24px_24px]"></div>
@@ -23,7 +23,7 @@ const Footer = () => {
 
       <div className="relative z-10">
         {/* Main Footer Content */}
-        <div className="container px-5 py-16 mx-auto">
+        <div className="container px-5 py-10 mx-auto">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
             {/* Brand Section */}
             <div className="space-y-6">
@@ -31,13 +31,13 @@ const Footer = () => {
                 <img
                   src={images.logo}
                   alt="logo"
-                  className="h-12 w-auto object-contain brightness-110 contrast-125 drop-shadow-lg hover:scale-105 transition-all duration-300"
+                  className="object-contain w-auto h-12 transition-all duration-300 brightness-110 contrast-125 drop-shadow-lg hover:scale-105"
                   onError={(e) => {
                     e.target.style.display = "none";
                   }}
                 />
               </Link>
-              <p className="text-slate-300 leading-relaxed max-w-xs">
+              <p className="max-w-xs leading-relaxed text-slate-300">
                 Welcome to Bhāga where I share my experiences, thoughts, and
                 insights about life, technology, and creativity. Join me on this
                 journey of discovery and let's learn together.
@@ -70,10 +70,10 @@ const Footer = () => {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-3 bg-forest-700/50 hover:bg-forest-600 rounded-xl transition-all duration-300 hover:scale-110 group"
+                    className="p-3 transition-all duration-300 bg-forest-700/50 hover:bg-forest-600 rounded-xl hover:scale-110 group"
                     aria-label={label}
                   >
-                    <Icon className="w-5 h-5 text-forest-400 group-hover:text-earth-50 transition-colors duration-300" />
+                    <Icon className="w-5 h-5 transition-colors duration-300 text-forest-400 group-hover:text-earth-50" />
                   </a>
                 ))}
               </div>
@@ -92,7 +92,7 @@ const Footer = () => {
                   <li key={name}>
                     <Link
                       to={href}
-                      className="text-slate-300 hover:text-forest-400 transition-colors duration-300 hover:translate-x-1 inline-block"
+                      className="inline-block transition-colors duration-300 text-slate-300 hover:text-forest-400 hover:translate-x-1"
                     >
                       {name}
                     </Link>
@@ -115,7 +115,7 @@ const Footer = () => {
                   <li key={name}>
                     <Link
                       to={href}
-                      className="text-slate-300 hover:text-forest-400 transition-colors duration-300 hover:translate-x-1 inline-block"
+                      className="inline-block transition-colors duration-300 text-slate-300 hover:text-forest-400 hover:translate-x-1"
                     >
                       {name}
                     </Link>
@@ -129,18 +129,18 @@ const Footer = () => {
               <h3 className="text-xl font-bold text-white">Get in Touch</h3>
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-slate-800/50 rounded-lg">
+                  <div className="p-2 rounded-lg bg-slate-800/50">
                     <FaEnvelope className="w-4 h-4 text-forest-400" />
                   </div>
                   <a
                     href="mailto:sumanthhegde002@gmail.com"
-                    className="text-slate-300 hover:text-forest-400 transition-colors duration-300"
+                    className="transition-colors duration-300 text-slate-300 hover:text-forest-400"
                   >
                     sumanthhegde002@gmail.com
                   </a>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-slate-800/50 rounded-lg">
+                  <div className="p-2 rounded-lg bg-slate-800/50">
                     <FaLocationDot className="w-4 h-4 text-forest-400" />
                   </div>
                   <span className="text-slate-300">Sirsi, Karnataka</span>
@@ -152,7 +152,7 @@ const Footer = () => {
 
         {/* Bottom Section */}
         <div className="border-t border-slate-700/50">
-          <div className="container px-5 py-8 mx-auto">
+          <div className="container px-5 py-5 mx-auto">
             <div className="flex flex-col items-center justify-center space-y-4 md:flex-row md:space-y-0">
               <div className="flex items-center space-x-2 text-slate-400">
                 <span>© {currentYear} Bhāga. Made with</span>
