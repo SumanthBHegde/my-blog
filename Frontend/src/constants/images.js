@@ -3,9 +3,9 @@ import HeroImage from "../assets/hero.png";
 import Post1Image from "../assets/posts/post1.jpg";
 import PostProfileImage from "../assets/posts/profile-pic.svg";
 
-//sample
-const samplePostImage = "/images/sample.jpg";
-const userImage = "/images/user.png";
+//sample - Using base path for GitHub Pages deployment
+const samplePostImage = "/my-blog/images/sample.jpg";
+const userImage = "/my-blog/images/user.png";
 
 const images = {
   logo,
