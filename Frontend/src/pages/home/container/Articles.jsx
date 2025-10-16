@@ -12,10 +12,12 @@ import ArticleCard from "../../../components/Articlecard";
 const Articles = () => {
   const { data, isLoading, isError, refetch } = useQuery({
     queryFn: () => getAllPosts("", 1, 6),
-    queryKey: ["posts"],
+    queryKey: ["posts", "home"],
     onError: (error) => {
       toast.error(error.message);
     },
+    retry: 2,
+    retryDelay: 1000,
   });
 
   return (

@@ -5,15 +5,12 @@ import { useSearchParams } from "react-router-dom";
 
 import { getAllPosts } from "../../services/index/posts";
 import ArticleCardSkeleton from "../../components/ArticleCardSkeleton";
-import ErrorMessage from "../../components/Errormessage";
 import LoadingError from "../../components/LoadingError";
 import ArticleCard from "../../components/Articlecard";
 import MainLayout from "../../components/MainLayout";
 import Pagination from "../../components/Pagination";
 import Search from "../../components/Search";
 import BreadCrumbs from "../../components/BreadCrumbs";
-
-let isFirstRun = true;
 
 const BlogPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -28,22 +25,19 @@ const BlogPage = () => {
     { name: "Blog", link: "/blog" },
   ];
 
-  const { data, isLoading, isError, isFetching, refetch } = useQuery({
+  const { data, isLoading, isError, isFetching, refetch, error } = useQuery({
     queryFn: () => getAllPosts(searchKeyword, currentPage, 12),
-    queryKey: ["posts"],
+    queryKey: ["posts", currentPage, searchKeyword],
     onError: (error) => {
       toast.error(error.message);
     },
+    retry: 2,
+    retryDelay: 1000,
   });
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (isFirstRun) {
-      isFirstRun = false;
-      return;
-    }
-    refetch();
-  }, [currentPage, searchKeyword, refetch]);
+  }, [currentPage, searchKeyword]);
 
   const handlePageChange = (page) => {
     setSearchParams({ page, search: searchKeyword });
@@ -111,13 +105,16 @@ const BlogPage = () => {
             ))
           )}
         </div>
-        {!isLoading && !isError && data?.data.length > 0 && (
-          <Pagination
-            onPageChange={(page) => handlePageChange(page)}
-            currentPage={currentPage}
-            totalPageCount={JSON.parse(data?.headers?.["x-totalpagecount"])}
-          />
-        )}
+        {!isLoading &&
+          !isError &&
+          data?.data.length > 0 &&
+          data?.headers?.["x-totalpagecount"] && (
+            <Pagination
+              onPageChange={(page) => handlePageChange(page)}
+              currentPage={currentPage}
+              totalPageCount={JSON.parse(data.headers["x-totalpagecount"])}
+            />
+          )}
       </section>
     </MainLayout>
   );
