@@ -10,11 +10,11 @@ const SuggestedPosts = ({ className, header, posts = [], tags }) => {
       <h2 className="font-medium font-Roboto text-dark-hard md:text-xl">
         {header}
       </h2>
-      <div className="grid mt-5 gap-y-5 md:grid-cols-2 md:gap-x-5 lg:grid-cols-1">
+      <div className="grid mt-5 gap-y-5 md:grid-cols-2 md:gap-x-5 lg:grid-cols-3 xl:grid-cols-3">
         {posts.map((item) => (
           <div
             key={item._id}
-            className="flex items-center space-x-3 flex-nowrap"
+            className="flex flex-col min-w-0 p-3 leading-tight transition-all duration-200 bg-white border border-gray-200 rounded-lg hover:border-primary hover:shadow-md"
           >
             <img
               src={
@@ -23,13 +23,18 @@ const SuggestedPosts = ({ className, header, posts = [], tags }) => {
                   : images.samplePostImage
               }
               alt={item.title}
-              className="object-cover w-1/5 rounded-lg aspect-square"
+              className="object-cover w-full h-32 mb-3 rounded-md"
             />
-            <div className="text-sm font-medium font-Roboto text-dark-hard ">
-              <h3 className="text-sm font-medium font-Roboto text-dark-hard md:text-base lg:text-lg">
-                <Link to={`/blog/${item.slug}`}>{item.title}</Link>
+            <div className="flex-1">
+              <h3 className="mb-2 text-sm font-medium font-Roboto text-dark-hard md:text-base line-clamp-2">
+                <Link
+                  to={`/blog/${item.slug}`}
+                  className="transition-colors hover:text-primary"
+                >
+                  {item.title}
+                </Link>
               </h3>
-              <span className="text-xs opacity-60">
+              <span className="block text-xs opacity-60">
                 {new Date(item.createdAt).toLocaleDateString("en-US", {
                   day: "numeric",
                   month: "short",

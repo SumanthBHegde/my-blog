@@ -9,6 +9,8 @@ import { stables } from "../constants";
 import CropEasy from "./crop/CropEasy";
 import { updateProfilePicture } from "../services/index/users";
 import { userActions } from "../store/reducers/userReducers";
+import CloudinaryImage from "./CloudinaryImage";
+import { getImageUrl } from "../utils/imageUtils";
 
 const ProfilePicture = ({ avatar }) => {
   const queryClient = useQueryClient();
@@ -70,10 +72,17 @@ const ProfilePicture = ({ avatar }) => {
             className="absolute inset-0 bg-transparent rounded-full cursor-pointer"
           >
             {avatar ? (
-              <img
-                src={stables.UPLOAD_FOLDER_BASE_URL + avatar}
+              <CloudinaryImage
+                src={getImageUrl(avatar)}
+                fallback={
+                  <div className="flex items-center justify-center w-full h-full bg-blue-50/50">
+                    <HiOutlineCamera className="h-auto w-7 text-primary" />
+                  </div>
+                }
                 alt="profile"
                 className="object-cover w-full h-full"
+                maxRetries={5}
+                retryDelay={2000}
               />
             ) : (
               <div className="flex items-center justify-center w-full h-full bg-blue-50/50">

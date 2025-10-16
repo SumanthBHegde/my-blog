@@ -1,7 +1,8 @@
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import {
   FiPlus,
   FiEdit,
@@ -11,13 +12,30 @@ import {
   FiTrendingUp,
 } from "react-icons/fi";
 
-import { getAllPosts } from "../../../services/index/posts";
+import { getAllPosts, createPost } from "../../../services/index/posts";
 import { getAllComments } from "../../../services/index/comments";
 import { getAllUsers } from "../../../services/index/users";
 
 const Admin = () => {
   const navigate = useNavigate();
   const userState = useSelector((state) => state.user);
+  const queryClient = useQueryClient();
+
+  // Mutation for creating a new post
+  const { mutate: mutateCreatePost, isLoading: isLoadingCreatePost } =
+    useMutation({
+      mutationFn: ({ token }) => {
+        return createPost({ token });
+      },
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(["posts"]);
+        toast.success("Post created! Edit it now.");
+        navigate(`/admin/posts/manage/edit/${data.slug}`);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
 
   // Fetch posts data for statistics
   const { data: postsData, isLoading: postsLoading } = useQuery({
@@ -84,7 +102,8 @@ const Admin = () => {
       icon: FiPlus,
       color: "bg-gradient-to-r from-forest-600 to-forest-700",
       hoverColor: "hover:from-forest-700 hover:to-forest-800",
-      action: () => navigate("/admin/posts/manage/edit/new"),
+      action: () => mutateCreatePost({ token: userState.userInfo.token }),
+      loading: isLoadingCreatePost,
     },
     {
       title: "Manage Posts",
@@ -180,14 +199,21 @@ const Admin = () => {
             <button
               key={index}
               onClick={action.action}
-              className={`${action.color} ${action.hoverColor} text-white rounded-xl p-6 text-left transition-all duration-300 hover:scale-105 hover:shadow-lg group`}
+              disabled={action.loading}
+              className={`${action.color} ${action.hoverColor} text-white rounded-xl p-6 text-left transition-all duration-300 hover:scale-105 hover:shadow-lg group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100`}
             >
               <div className="flex items-start space-x-4">
                 <div className="p-3 transition-transform duration-300 rounded-lg bg-white/20 group-hover:scale-110">
-                  <action.icon className="w-6 h-6" />
+                  {action.loading ? (
+                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <action.icon className="w-6 h-6" />
+                  )}
                 </div>
                 <div className="flex-1">
-                  <h3 className="mb-2 text-lg font-semibold">{action.title}</h3>
+                  <h3 className="mb-2 text-lg font-semibold">
+                    {action.loading ? "Creating..." : action.title}
+                  </h3>
                   <p className="text-sm leading-relaxed text-white/80">
                     {action.description}
                   </p>

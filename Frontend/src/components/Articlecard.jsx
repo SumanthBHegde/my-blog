@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { BsCheckLg, BsHeart, BsHeartFill } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
 
-import { images, stables } from "../constants";
+import { images } from "../constants";
+import CloudinaryImage from "./CloudinaryImage";
+import { getImageUrl } from "../utils/imageUtils";
 
 const Articlecard = ({ post, className }) => {
   const [isLiked, setIsLiked] = useState(false);
@@ -22,18 +24,13 @@ const Articlecard = ({ post, className }) => {
       {/* Image Section */}
       <div className="relative overflow-hidden">
         <Link to={`/blog/${post.slug}`}>
-          <img
-            src={
-              post.photo
-                ? stables.UPLOAD_FOLDER_BASE_URL + post.photo
-                : images.samplePostImage
-            }
+          <CloudinaryImage
+            src={getImageUrl(post.photo, images.samplePostImage)}
+            fallback={images.samplePostImage}
             alt={post.title}
             className="object-cover object-center w-full h-48 md:h-56 lg:h-48 xl:h-60 group-hover:scale-110 transition-transform duration-700"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = images.samplePostImage;
-            }}
+            maxRetries={6}
+            retryDelay={2000}
           />
         </Link>
 
@@ -76,18 +73,13 @@ const Articlecard = ({ post, className }) => {
         {/* Author Section */}
         <div className="flex items-center justify-between pt-2">
           <div className="flex items-center gap-3">
-            <img
-              src={
-                post.user.avatar
-                  ? stables.UPLOAD_FOLDER_BASE_URL + post.user.avatar
-                  : images.userImage
-              }
+            <CloudinaryImage
+              src={getImageUrl(post.user.avatar, images.userImage)}
+              fallback={images.userImage}
               alt={post.user.name}
               className="rounded-full w-10 h-10 md:w-12 md:h-12 ring-2 ring-forest-200 group-hover:ring-forest-300 transition-all duration-300"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = images.userImage;
-              }}
+              maxRetries={4}
+              retryDelay={1500}
             />
             <div className="flex flex-col">
               <h4 className="text-sm font-semibold text-forest-900 group-hover:text-forest-700 transition-colors duration-200">

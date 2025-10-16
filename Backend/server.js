@@ -4,6 +4,30 @@ import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
 
+// Get the directory name in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load environment variables FIRST before any other imports
+// Explicitly specify the .env file path
+dotenv.config({ path: path.join(__dirname, ".env") });
+
+// Debug: Verify env variables are loaded (comment out in production)
+// console.log("=== Environment Variables Check ===");
+// console.log(
+//   "CLOUDINARY_CLOUD_NAME:",
+//   process.env.CLOUDINARY_CLOUD_NAME ? "✓ Loaded" : "✗ Missing"
+// );
+// console.log(
+//   "CLOUDINARY_API_KEY:",
+//   process.env.CLOUDINARY_API_KEY ? "✓ Loaded" : "✗ Missing"
+// );
+// console.log(
+//   "CLOUDINARY_API_SECRET:",
+//   process.env.CLOUDINARY_API_SECRET ? "✓ Loaded" : "✗ Missing"
+// );
+// console.log("====================================\n");
+
 import connectDB from "./config/db.js";
 import {
   errorResponseHandler,
@@ -16,7 +40,6 @@ import postRoutes from "./routes/postRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
 import postCategoriesRoutes from "./routes/postCategoriesRoutes.js";
 
-dotenv.config();
 connectDB();
 const app = express();
 app.use(express.json());
@@ -65,8 +88,6 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/post-categories", postCategoriesRoutes);
 
 // static assets
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 //error handlers

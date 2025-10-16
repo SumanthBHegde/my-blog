@@ -13,3 +13,6 @@ uploads
 
 #logs
 *.log
+
+#test
+tests

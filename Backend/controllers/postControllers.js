@@ -48,6 +48,10 @@ const createPost = async (req, res, next) => {
 // Controller function to update an existing post
 const updatePost = async (req, res, next) => {
   try {
+    console.log("=== UPDATE POST REQUEST ===");
+    console.log("Slug:", req.params.slug);
+    console.log("Content-Type:", req.get("Content-Type"));
+
     // Find the post to be updated by slug
     const post = await Post.findOne({ slug: req.params.slug });
 
@@ -81,6 +85,7 @@ const updatePost = async (req, res, next) => {
     upload(req, res, async function (err) {
       if (err) {
         // Handle errors that occur during file upload
+        console.error("Multer upload error:", err);
         const error = new Error(
           "An unknown error occurred when uploading: " + err.message
         );
@@ -88,24 +93,40 @@ const updatePost = async (req, res, next) => {
         return; // Exit the callback function if there's an error
       }
 
+      console.log(
+        "File upload attempt - req.file:",
+        req.file ? "File received" : "No file"
+      );
+      console.log(
+        "Request body document:",
+        req.body.document ? "Document data received" : "No document"
+      );
+
       // If file upload is successful
       if (req.file) {
+        console.log("Uploading to Cloudinary - File path:", req.file.path);
+        console.log("Cloudinary URL received:", req.file.path);
+
         // Delete old image from Cloudinary if exists
         if (post.photo) {
           try {
+            console.log("Deleting old photo:", post.photo);
             // Extract public_id from Cloudinary URL
             const publicId = post.photo
               .split("/")
               .slice(-2)
               .join("/")
               .split(".")[0];
+            console.log("Deleting public_id:", publicId);
             await cloudinary.uploader.destroy(publicId);
+            console.log("Old photo deleted successfully");
           } catch (error) {
             console.error("Error deleting old image from Cloudinary:", error);
           }
         }
         // Store the full Cloudinary URL
         post.photo = req.file.path;
+        console.log("New photo URL saved to post:", post.photo);
       } else if (req.body.document) {
         // If explicitly removing image (no file uploaded)
         const parsedData = JSON.parse(req.body.document);
