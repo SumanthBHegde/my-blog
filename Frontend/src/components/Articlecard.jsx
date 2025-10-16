@@ -30,6 +30,10 @@ const Articlecard = ({ post, className }) => {
             }
             alt={post.title}
             className="object-cover object-center w-full h-48 md:h-56 lg:h-48 xl:h-60 group-hover:scale-110 transition-transform duration-700"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = images.samplePostImage;
+            }}
           />
         </Link>
 
@@ -80,6 +84,10 @@ const Articlecard = ({ post, className }) => {
               }
               alt={post.user.name}
               className="rounded-full w-10 h-10 md:w-12 md:h-12 ring-2 ring-forest-200 group-hover:ring-forest-300 transition-all duration-300"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = images.userImage;
+              }}
             />
             <div className="flex flex-col">
               <h4 className="text-sm font-semibold text-forest-900 group-hover:text-forest-700 transition-colors duration-200">

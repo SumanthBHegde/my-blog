@@ -3,8 +3,8 @@ import Comment from "../models/Comments.js";
 import Post from "../models/Post.js";
 
 // Middleware imports
-import { uploadPicture } from "../middleware/uploadPictureMiddleware.js";
-import { fileRemover } from "../utils/fileRemover.js";
+import { uploadProfilePicture } from "../middleware/uploadPictureMiddleware.js";
+import { cloudinary } from "../config/cloudinary.js";
 import { sendVerificationEmail } from "../utils/emailService.js";
 
 // Helper function to format user response data (excludes sensitive info like password)
@@ -295,7 +295,7 @@ const updateProfile = async (req, res, next) => {
 
 const updateProfilePicture = async (req, res, next) => {
   try {
-    const upload = uploadPicture.single("profilePicture");
+    const upload = uploadProfilePicture.single("profilePicture");
 
     upload(req, res, async function (err) {
       if (err) {
@@ -304,18 +304,31 @@ const updateProfilePicture = async (req, res, next) => {
         );
         next(error);
       } else {
-        // every thing went well
+        // Everything went well
         if (req.file) {
-          let filename;
-          //first deleting the image
           let updatedUser = await User.findById(req.user._id);
-          filename = updatedUser.avatar;
-          if (filename) {
-            await fileRemover(filename);
+
+          // Delete old avatar from Cloudinary if exists
+          if (updatedUser.avatar) {
+            try {
+              const publicId = updatedUser.avatar
+                .split("/")
+                .slice(-2)
+                .join("/")
+                .split(".")[0];
+              await cloudinary.uploader.destroy(publicId);
+            } catch (error) {
+              console.error(
+                "Error deleting old avatar from Cloudinary:",
+                error
+              );
+            }
           }
-          //then saving the file
-          updatedUser.avatar = req.file.filename;
+
+          // Save new Cloudinary URL
+          updatedUser.avatar = req.file.path;
           await updatedUser.save();
+
           res.json({
             _id: updatedUser._id,
             avatar: updatedUser.avatar,
@@ -326,12 +339,25 @@ const updateProfilePicture = async (req, res, next) => {
             token: await updatedUser.generateJWT(),
           });
         } else {
-          let filename;
+          // Remove avatar
           let updatedUser = await User.findById(req.user._id);
-          filename = updatedUser.avatar;
+
+          if (updatedUser.avatar) {
+            try {
+              const publicId = updatedUser.avatar
+                .split("/")
+                .slice(-2)
+                .join("/")
+                .split(".")[0];
+              await cloudinary.uploader.destroy(publicId);
+            } catch (error) {
+              console.error("Error deleting avatar from Cloudinary:", error);
+            }
+          }
+
           updatedUser.avatar = "";
           await updatedUser.save();
-          await fileRemover(filename);
+
           res.json({
             _id: updatedUser._id,
             avatar: updatedUser.avatar,
@@ -405,12 +431,37 @@ const deleteUser = async (req, res, next) => {
       _id: { $in: postIdsToDelete },
     });
 
-    postsToDelete.forEach((post) => {
-      fileRemover(post.photo);
-    });
+    // Delete all post images from Cloudinary
+    for (const post of postsToDelete) {
+      if (post.photo) {
+        try {
+          const publicId = post.photo
+            .split("/")
+            .slice(-2)
+            .join("/")
+            .split(".")[0];
+          await cloudinary.uploader.destroy(publicId);
+        } catch (error) {
+          console.error("Error deleting post image from Cloudinary:", error);
+        }
+      }
+    }
+
+    // Delete user avatar from Cloudinary
+    if (user.avatar) {
+      try {
+        const publicId = user.avatar
+          .split("/")
+          .slice(-2)
+          .join("/")
+          .split(".")[0];
+        await cloudinary.uploader.destroy(publicId);
+      } catch (error) {
+        console.error("Error deleting user avatar from Cloudinary:", error);
+      }
+    }
 
     await user.deleteOne();
-    await fileRemover(user.avatar);
 
     res.status(204).json({ message: "User is deleted successfully" });
   } catch (error) {

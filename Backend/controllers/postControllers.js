@@ -1,7 +1,7 @@
 import { uploadPicture } from "../middleware/uploadPictureMiddleware.js";
 import Post from "../models/Post.js";
 import Comment from "../models/Comments.js";
-import { fileRemover } from "../utils/fileRemover.js";
+import { cloudinary } from "../config/cloudinary.js";
 import { v4 as uuidv4 } from "uuid";
 
 // Controller function to create a new post
@@ -73,18 +73,37 @@ const updatePost = async (req, res, next) => {
 
       // If file upload is successful
       if (req.file) {
-        // If a new file is uploaded, update the post's photo field
-        let filename = post.photo;
-        if (filename) {
-          await fileRemover(filename); // Wait for file removal to complete
+        // Delete old image from Cloudinary if exists
+        if (post.photo) {
+          try {
+            // Extract public_id from Cloudinary URL
+            const publicId = post.photo
+              .split("/")
+              .slice(-2)
+              .join("/")
+              .split(".")[0];
+            await cloudinary.uploader.destroy(publicId);
+          } catch (error) {
+            console.error("Error deleting old image from Cloudinary:", error);
+          }
         }
-        post.photo = req.file.filename;
-      } else {
-        // If no file is uploaded, remove the existing file from the post
-        let filename = post.photo;
-        post.photo = "";
-        if (filename) {
-          await fileRemover(filename); // Wait for file removal to complete
+        // Store the full Cloudinary URL
+        post.photo = req.file.path;
+      } else if (req.body.document) {
+        // If explicitly removing image (no file uploaded)
+        const parsedData = JSON.parse(req.body.document);
+        if (parsedData.removePhoto && post.photo) {
+          try {
+            const publicId = post.photo
+              .split("/")
+              .slice(-2)
+              .join("/")
+              .split(".")[0];
+            await cloudinary.uploader.destroy(publicId);
+            post.photo = "";
+          } catch (error) {
+            console.error("Error deleting image from Cloudinary:", error);
+          }
         }
       }
 
@@ -166,7 +185,19 @@ const getPost = async (req, res, next) => {
       return next(error);
     }
 
-    await fileRemover(post.photo);
+    // Delete image from Cloudinary if exists
+    if (post.photo) {
+      try {
+        const publicId = post.photo
+          .split("/")
+          .slice(-2)
+          .join("/")
+          .split(".")[0];
+        await cloudinary.uploader.destroy(publicId);
+      } catch (error) {
+        console.error("Error deleting image from Cloudinary:", error);
+      }
+    }
 
     // Return the retrieved post as a JSON response
     return res.json(post);

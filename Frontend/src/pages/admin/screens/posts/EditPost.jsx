@@ -87,21 +87,14 @@ const EditPost = () => {
 
     // Prepare data for update
     if (!initialPhoto && photo) {
+      // New photo uploaded
       updatedData.append("postPicture", photo);
-    } else if (initialPhoto && !photo) {
-      // If photo is not updated, retain the existing photo
-      const urlToObject = async (url) => {
-        let reponse = await fetch(url);
-        let blob = await reponse.blob();
-        const file = new File([blob], initialPhoto, { type: blob.type });
-        return file;
-      };
-      const picture = await urlToObject(
-        stables.UPLOAD_FOLDER_BASE_URL + data?.photo
-      );
-
-      updatedData.append("postPicture", picture);
+    } else if (initialPhoto && photo) {
+      // Photo changed - upload new one
+      updatedData.append("postPicture", photo);
     }
+    // If initialPhoto exists and no new photo, don't append anything
+    // The backend will keep the existing photo reference
 
     updatedData.append(
       "document",
@@ -249,12 +242,32 @@ const EditPost = () => {
                         src={stables.UPLOAD_FOLDER_BASE_URL + data?.photo}
                         alt={data?.title}
                         className="w-full h-48 object-cover"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.style.display = "none";
+                          e.target.nextElementSibling.style.display = "flex";
+                        }}
                       />
-                    ) : (
+                    ) : null}
+                    {!photo && !initialPhoto && (
                       <div className="w-full h-48 bg-gradient-to-br from-forest-50 to-earth-50 flex flex-col justify-center items-center gap-2">
                         <HiOutlineCamera className="h-12 w-12 text-forest-400 group-hover:text-forest-600 transition-colors" />
                         <span className="text-sm font-medium text-forest-600">
-                          Click to upload
+                          Click to upload image
+                        </span>
+                      </div>
+                    )}
+                    {initialPhoto && !photo && (
+                      <div
+                        style={{ display: "none" }}
+                        className="w-full h-48 bg-gradient-to-br from-amber-50 to-orange-50 flex flex-col justify-center items-center gap-2"
+                      >
+                        <HiOutlineCamera className="h-12 w-12 text-amber-400" />
+                        <span className="text-sm font-medium text-amber-600">
+                          Image unavailable (click to upload new)
+                        </span>
+                        <span className="text-xs text-amber-500">
+                          Files on free hosting are temporary
                         </span>
                       </div>
                     )}

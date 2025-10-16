@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
 
 export const useDataTable = ({
@@ -14,7 +14,7 @@ export const useDataTable = ({
   const [searchKeyword, setSearchKeyword] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data, isLoading, isFetching, refetch, isError, error } = useQuery({
+  const { data, isLoading, isFetching, isError, error } = useQuery({
     queryFn: dataQueryFn,
     queryKey: [dataQueryKey, currentPage, searchKeyword],
     onError: (err) => {
