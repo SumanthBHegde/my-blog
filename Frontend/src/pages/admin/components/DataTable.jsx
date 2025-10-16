@@ -1,4 +1,5 @@
 import Pagination from "../../../components/Pagination";
+import ErrorMessage from "../../../components/Errormessage";
 
 const DataTable = ({
   pageTitle,
@@ -15,6 +16,8 @@ const DataTable = ({
   setCurrentPage,
   currentPage,
   headers,
+  isError,
+  error,
 }) => {
   return (
     <div className="w-full">
@@ -70,7 +73,18 @@ const DataTable = ({
                 </tr>
               </thead>
               <tbody className="divide-y divide-forest-100">
-                {isLoading || isFetching ? (
+                {isError ? (
+                  <tr>
+                    <td
+                      colSpan={tableHeaderTitleList.length}
+                      className="px-6 py-12"
+                    >
+                      <ErrorMessage
+                        message={error?.message || "Failed to load data"}
+                      />
+                    </td>
+                  </tr>
+                ) : isLoading || isFetching ? (
                   <tr>
                     <td
                       colSpan={tableHeaderTitleList.length}

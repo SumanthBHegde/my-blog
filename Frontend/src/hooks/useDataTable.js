@@ -16,9 +16,13 @@ export const useDataTable = ({
   const [searchKeyword, setSearchKeyword] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data, isLoading, isFetching, refetch } = useQuery({
+  const { data, isLoading, isFetching, refetch, isError, error } = useQuery({
     queryFn: dataQueryFn,
     queryKey: [dataQueryKey],
+    onError: (err) => {
+      toast.error(err.message);
+      console.error("Data fetch error:", err);
+    },
   });
 
   const { mutate: mutateDeletePost, isLoading: isLoadingDeleteData } =
@@ -71,5 +75,7 @@ export const useDataTable = ({
     submitSearchKeywordHandler,
     deleteDataHandler,
     setCurrentPage,
+    isError,
+    error,
   };
 };
