@@ -92,107 +92,144 @@ const ProfilePage = () => {
 
   return (
     <MainLayout>
-      <section className="container px-5 py-10 mx-auto">
-        <div className="w-full max-w-sm mx-auto">
+      <section className="min-h-screen py-6 sm:py-10 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-forest-50/20 via-white to-forest-50/10">
+        <div className="container mx-auto max-w-2xl">
           <BreadCrumbs data={breadCrumbsData} />
-          {/* Display user's profile picture */}
-          <ProfilePicture avatar={profileData?.avatar} />
-          <form onSubmit={handleSubmit(submitHandler)}>
-            {/* Input fields for updating user profile */}
-            <div className="flex flex-col w-full mb-6">
-              <label
-                htmlFor="name"
-                className="text-[#5a7184] font-semibold block"
-              >
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                {...register("name", {
-                  minLength: {
-                    value: 1,
-                    message: "Name length must be at least 1 character",
-                  },
-                  required: {
-                    value: true,
-                    message: "Name is required",
-                  },
-                })}
-                placeholder="Enter name"
-                className={`placeholder:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${
-                  errors.name ? "border-red-500" : "border-[#c3cad9]"
-                }`}
-              />
-              {errors.name?.message && (
-                <p className="mt-1 text-xs text-red-500">
-                  {errors.name?.message}
-                </p>
-              )}
-            </div>
-            <div className="flex flex-col w-full mb-6">
-              <label
-                htmlFor="email"
-                className="text-[#5a7184] font-semibold block"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                {...register("email", {
-                  pattern: {
-                    value:
-                      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                    message: "Enter a valid email",
-                  },
-                  required: {
-                    value: true,
-                    message: "Email is required",
-                  },
-                })}
-                placeholder="Enter email"
-                className={`placeholder:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${
-                  errors.email ? "border-red-500" : "border-[#c3cad9]"
-                }`}
-              />
-              {errors.email?.message && (
-                <p className="mt-1 text-xs text-red-500">
-                  {errors.email?.message}
-                </p>
-              )}
-            </div>
-            <div className="flex flex-col w-full mb-6">
-              <label
-                htmlFor="password"
-                className="text-[#5a7184] font-semibold block"
-              >
-                New Password (optional)
-              </label>
-              <input
-                type="password"
-                id="password"
-                {...register("password")}
-                placeholder="Enter new password"
-                className={`placeholder:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${
-                  errors.password ? "border-red-500" : "border-[#c3cad9]"
-                }`}
-              />
-              {errors.password?.message && (
-                <p className="mt-1 text-xs text-red-500">
-                  {errors.password?.message}
-                </p>
-              )}
-            </div>
-            {/* Submit button */}
-            <button
-              type="submit"
-              disabled={!isValid || profileIsLoading || updateProfileIsLoading}
-              className="w-full px-8 py-4 mb-6 text-lg font-bold text-white rounded-lg bg-primary disabled:opacity-70 disabled:cursor-not-allowed"
+
+          {/* Page Header */}
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-dark-hard mb-2">
+              Profile Settings
+            </h1>
+            <p className="text-sm sm:text-base text-dark-light">
+              Manage your account information and preferences
+            </p>
+          </div>
+
+          {/* Profile Picture Card */}
+          <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow mb-4 sm:mb-6">
+            <h2 className="text-base sm:text-lg font-semibold text-dark-hard mb-4">
+              Profile Picture
+            </h2>
+            <ProfilePicture avatar={profileData?.avatar} />
+          </div>
+
+          {/* Profile Form Card */}
+          <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 lg:p-8 shadow-sm hover:shadow-md transition-shadow">
+            <form
+              onSubmit={handleSubmit(submitHandler)}
+              className="space-y-4 sm:space-y-5"
             >
-              Update
-            </button>
-          </form>
+              {/* Name Field */}
+              <div className="flex flex-col">
+                <label
+                  htmlFor="name"
+                  className="text-sm sm:text-base font-semibold text-dark-hard mb-2"
+                >
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  {...register("name", {
+                    minLength: {
+                      value: 1,
+                      message: "Name length must be at least 1 character",
+                    },
+                    required: {
+                      value: true,
+                      message: "Name is required",
+                    },
+                  })}
+                  placeholder="Enter name"
+                  className={`placeholder:text-gray-400 text-dark-hard text-sm sm:text-base rounded-lg px-4 py-2.5 sm:py-3 font-medium outline-none border transition-colors ${
+                    errors.name
+                      ? "border-red-500 focus:ring-2 focus:ring-red-200"
+                      : "border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  }`}
+                />
+                {errors.name?.message && (
+                  <p className="mt-1.5 text-xs sm:text-sm text-red-500">
+                    {errors.name?.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Email Field */}
+              <div className="flex flex-col">
+                <label
+                  htmlFor="email"
+                  className="text-sm sm:text-base font-semibold text-dark-hard mb-2"
+                >
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  {...register("email", {
+                    pattern: {
+                      value:
+                        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                      message: "Enter a valid email",
+                    },
+                    required: {
+                      value: true,
+                      message: "Email is required",
+                    },
+                  })}
+                  placeholder="Enter email"
+                  className={`placeholder:text-gray-400 text-dark-hard text-sm sm:text-base rounded-lg px-4 py-2.5 sm:py-3 font-medium outline-none border transition-colors ${
+                    errors.email
+                      ? "border-red-500 focus:ring-2 focus:ring-red-200"
+                      : "border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  }`}
+                />
+                {errors.email?.message && (
+                  <p className="mt-1.5 text-xs sm:text-sm text-red-500">
+                    {errors.email?.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Password Field */}
+              <div className="flex flex-col">
+                <label
+                  htmlFor="password"
+                  className="text-sm sm:text-base font-semibold text-dark-hard mb-2"
+                >
+                  New Password{" "}
+                  <span className="text-gray-500 font-normal">(optional)</span>
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  {...register("password")}
+                  placeholder="Enter new password"
+                  className={`placeholder:text-gray-400 text-dark-hard text-sm sm:text-base rounded-lg px-4 py-2.5 sm:py-3 font-medium outline-none border transition-colors ${
+                    errors.password
+                      ? "border-red-500 focus:ring-2 focus:ring-red-200"
+                      : "border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  }`}
+                />
+                {errors.password?.message && (
+                  <p className="mt-1.5 text-xs sm:text-sm text-red-500">
+                    {errors.password?.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={
+                  !isValid || profileIsLoading || updateProfileIsLoading
+                }
+                className="w-full px-6 py-3 sm:py-3.5 text-sm sm:text-base lg:text-lg font-semibold text-white rounded-lg bg-primary hover:bg-primary/90 disabled:opacity-70 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
+              >
+                {updateProfileIsLoading ? "Updating..." : "Update Profile"}
+              </button>
+            </form>
+          </div>
         </div>
       </section>
     </MainLayout>

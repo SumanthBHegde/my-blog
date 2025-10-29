@@ -8,6 +8,8 @@ import ArticleDetailPage from "./pages/articleDetail/ArticleDetailPage";
 import RegisterPage from "./pages/register/RegisterPage";
 import EmailVerificationPage from "./pages/register/EmailVerificationPage";
 import LoginPage from "./pages/login/LoginPage";
+import ForgotPasswordPage from "./pages/forgotPassword/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/resetPassword/ResetPasswordPage";
 import ProfilePage from "./pages/profile/ProfilePage";
 import AdminLayout from "./pages/admin/AdminLayout";
 import Admin from "./pages/admin/screens/Admin";
@@ -20,6 +22,7 @@ import Users from "./pages/admin/screens/users/Users";
 import BlogPage from "./pages/blog/BlogPage";
 import AboutPage from "./pages/about/AboutPage";
 import ContactPage from "./pages/contact/ContactPage";
+import NotFoundPage from "./pages/notFound/NotFoundPage";
 
 function App() {
   return (
@@ -33,6 +36,8 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/verify-email" element={<EmailVerificationPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/forget-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Admin />} />
@@ -46,6 +51,8 @@ function App() {
           />
           <Route path="users/manage" element={<Users />} />
         </Route>
+        {/* 404 - Catch all unmatched routes */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Toaster />
     </div>

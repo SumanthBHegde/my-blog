@@ -5,7 +5,10 @@ import Post from "../models/Post.js";
 // Middleware imports
 import { uploadProfilePicture } from "../middleware/uploadPictureMiddleware.js";
 import { cloudinary } from "../config/cloudinary.js";
-import { sendVerificationEmail } from "../utils/emailService.js";
+import {
+  sendVerificationEmail,
+  sendPasswordResetEmail,
+} from "../utils/emailService.js";
 
 // Helper function to format user response data (excludes sensitive info like password)
 const formatUserResponse = (user) => ({
@@ -469,6 +472,112 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
+// Controller to handle forgot password request
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    // Find user by email
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      // Return success even if user not found (security best practice)
+      return res.status(200).json({
+        message:
+          "If an account exists with this email, you will receive a password reset code.",
+      });
+    }
+
+    // Check if user is verified
+    if (!user.verified) {
+      throw new Error(
+        "Please verify your email first before resetting password"
+      );
+    }
+
+    // Generate reset token
+    const resetCode = user.getResetPasswordToken();
+
+    // Save user with reset token
+    await user.save();
+
+    // Send password reset email
+    try {
+      await sendPasswordResetEmail(email, resetCode);
+    } catch (emailError) {
+      console.error("Email sending failed:", emailError.message);
+      // Clear reset token if email fails in production
+      if (process.env.NODE_ENV === "production") {
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        await user.save();
+        throw emailError;
+      }
+    }
+
+    // Return success response
+    res.status(200).json({
+      message:
+        process.env.NODE_ENV === "production"
+          ? "Password reset code sent to your email"
+          : `Password reset code sent. Check console: ${resetCode}`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Controller to handle password reset
+const resetPassword = async (req, res, next) => {
+  try {
+    const { email, resetCode, newPassword } = req.body;
+
+    // Validate input
+    if (!email || !resetCode || !newPassword) {
+      throw new Error("Please provide email, reset code, and new password");
+    }
+
+    if (newPassword.length < 6) {
+      throw new Error("Password must be at least 6 characters long");
+    }
+
+    // Find user by email
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      throw new Error("Invalid reset code or email");
+    }
+
+    // Check if reset token exists and is not expired
+    if (
+      !user.resetPasswordToken ||
+      !user.resetPasswordExpire ||
+      user.resetPasswordExpire < Date.now()
+    ) {
+      throw new Error("Reset code has expired. Please request a new one.");
+    }
+
+    // Verify reset code
+    if (user.resetPasswordToken !== resetCode) {
+      throw new Error("Invalid reset code");
+    }
+
+    // Update password (will be hashed by pre-save hook)
+    user.password = newPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    // Return success response
+    res.status(200).json({
+      message:
+        "Password reset successful. You can now login with your new password.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -479,4 +588,6 @@ export {
   updateProfilePicture,
   getAllUsers,
   deleteUser,
+  forgotPassword,
+  resetPassword,
 };

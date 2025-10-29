@@ -13,6 +13,8 @@ import {
   updateProfilePicture,
   deleteUser,
   getAllUsers,
+  forgotPassword,
+  resetPassword,
 } from "../controllers/userControllers.js";
 
 //Middleware
@@ -31,6 +33,8 @@ router.post(
   verificationLimiter,
   resendVerificationCode
 );
+router.post("/forgot-password", verificationLimiter, forgotPassword);
+router.post("/reset-password", verificationLimiter, resetPassword);
 router.get("/profile", authGuard, userProfile);
 router.put("/updateProfile/:userId", authGuard, verifiedGuard, updateProfile);
 router.put(
@@ -43,4 +47,3 @@ router.get("/", authGuard, adminGuard, getAllUsers);
 router.delete("/:userId", authGuard, adminGuard, deleteUser);
 
 export default router;
-

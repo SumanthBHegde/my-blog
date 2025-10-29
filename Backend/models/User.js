@@ -38,6 +38,8 @@ const UserSchema = new Schema(
     verified: { type: Boolean, default: false }, // Email verification status
     verificationCode: { type: String, required: false }, // Code for email verification
     admin: { type: Boolean, default: false }, // Admin privilege flag
+    resetPasswordToken: { type: String }, // Token for password reset
+    resetPasswordExpire: { type: Date }, // Expiration time for reset token
   },
   { timestamps: true } // Automatically adds createdAt and updatedAt fields
 );
@@ -67,7 +69,20 @@ UserSchema.methods.comparePassword = async function (enteredPassword) {
   return await compare(enteredPassword, this.password); // Returns true if passwords match
 };
 
+// Instance method to generate password reset token
+UserSchema.methods.getResetPasswordToken = function () {
+  // Generate a 6-digit reset code
+  const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+  // Set reset token (hashed for security)
+  this.resetPasswordToken = resetCode;
+
+  // Set expiration time (10 minutes from now)
+  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+
+  return resetCode;
+};
+
 // Create and export the User model based on the schema
 const User = model("User", UserSchema);
 export default User;
-

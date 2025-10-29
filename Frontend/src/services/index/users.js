@@ -166,3 +166,33 @@ export const verifyEmail = async ({ email, verificationCode }) => {
     throw new Error(error.message);
   }
 };
+
+//forgot password
+export const forgotPassword = async ({ email }) => {
+  try {
+    const { data } = await axios.post("/api/users/forgot-password", {
+      email,
+    });
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data.message)
+      throw new Error(error.response.data.message);
+    throw new Error(error.message);
+  }
+};
+
+//reset password
+export const resetPassword = async ({ email, resetCode, newPassword }) => {
+  try {
+    const { data } = await axios.post("/api/users/reset-password", {
+      email,
+      resetCode,
+      newPassword,
+    });
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data.message)
+      throw new Error(error.response.data.message);
+    throw new Error(error.message);
+  }
+};
