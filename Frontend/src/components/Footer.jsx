@@ -56,7 +56,7 @@ const Footer = () => {
                   },
                   {
                     icon: FaLinkedin,
-                    href: "https://www.linkedin.com/in/sumanth-hegde-37805a2b9?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+                    href: "https://www.linkedin.com/in/sumanth-hegde-37805a2b9/",
                     label: "LinkedIn",
                   },
                   {

@@ -111,7 +111,7 @@ const ContactPage = () => {
               </h3>
               <div className="space-y-3">
                 <a
-                  href="https://www.linkedin.com/in/sumanth-hegde-37805a2b9"
+                  href="https://www.linkedin.com/in/sumanth-hegde-37805a2b9/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center space-x-3 p-3 bg-white hover:bg-blue-50 rounded-lg transition-colors duration-300 group"

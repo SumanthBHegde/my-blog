@@ -130,7 +130,7 @@ const AboutPage = () => {
             {/* Social Links */}
             <div className="flex flex-wrap gap-4 mb-6">
               <a
-                href="https://www.linkedin.com/in/sumanth-hegde-37805a2b9"
+                href="https://www.linkedin.com/in/sumanth-hegde-37805a2b9/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-300"
